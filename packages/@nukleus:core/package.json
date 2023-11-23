@@ -1,0 +1,12 @@
+{
+  "name": "@nukleus/core",
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "three": "^0.158.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.158.3"
+  }
+}

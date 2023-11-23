@@ -1,0 +1,3 @@
+const Entity = {};
+
+export { Entity };
