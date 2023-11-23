@@ -1,0 +1,18 @@
+{
+	"extends": ["next/core-web-vitals", "plugin:react/recommended", "prettier"],
+	"plugins": ["prettier"],
+	"ignorePatterns": ["**/dist/**/*.ts", "**/dist/**/*.tsx"],
+	"rules": {
+		"prettier/prettier": ["warn", { "endOfLine": "auto" }],
+		"func-style": [2, "expression"],
+		"react/self-closing-comp": [
+			"error",
+			{
+				"component": true,
+				"html": true
+			}
+		],
+		"react/react-in-jsx-scope": "off",
+		"react/prop-types": "off"
+	}
+}

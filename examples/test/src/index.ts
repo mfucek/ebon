@@ -1,3 +1,5 @@
+import { add } from '@nukleus/core';
+
 // import { Entity } from '../../../packages/@nukleus:core/src/modules/entity';
 
 // const Player = new Entity()
@@ -10,3 +12,5 @@
 // 		a += delta;
 // 		this.rotation.x = a;
 // 	});
+
+console.log(add(2, 3));
