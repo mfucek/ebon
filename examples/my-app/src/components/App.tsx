@@ -1,5 +1,6 @@
-import { NukleusContainer, add } from '@nukleus/core';
+import { NukleusContainer } from '@nukleus/core';
 import { useEffect } from 'react';
+import { game } from '../nukleus';
 
 function App() {
 	useEffect(() => {
@@ -7,20 +8,9 @@ function App() {
 	}, []);
 
 	return (
-		<div className="App">
-			<header className="App-header">
-				<p>Hello</p>
-				<a
-					className="App-link"
-					href="https://reactjs.org"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					Learn React {add(1, 2)}
-				</a>
-				<NukleusContainer />
-			</header>
-		</div>
+		<main className="App">
+			<NukleusContainer windowSized script={game} />
+		</main>
 	);
 }
 

@@ -1,4 +1,6 @@
-import { Entity } from '@nukleus/core';
+import { Entity, Nukleus, Scene } from '@nukleus/core';
+
+const nukleus = new Nukleus();
 
 // Entity
 
@@ -24,9 +26,15 @@ const Skeleton = new Entity()
 	});
 
 // Scene
+const scene = new Scene();
 
-Skeleton.createInstance();
+scene.addEntity(Skeleton);
 
-const interval = setInterval(() => {
-	Skeleton.executeTick(1);
-}, 2000);
+scene.init();
+scene.tick();
+
+// const interval = setInterval(() => {
+// 	Skeleton.executeTick(1);
+// }, 2000);
+
+export { nukleus as game };
