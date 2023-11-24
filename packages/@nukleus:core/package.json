@@ -11,9 +11,10 @@
 	"author": "Matija Fucek <contact@mfucek.com> (https://www.mfucek.com)",
 	"license": "MIT",
 	"scripts": {
-		"dev": "tsup --watch",
-		"build": "tsup",
-		"test": "jest"
+		"dev": "tsup --watch --onSuccess \"npm link\"",
+		"build": "tsup && npm link",
+		"test": "jest",
+		"publish": "npm publish"
 	},
 	"dependencies": {
 		"three": "^0.158.0"
