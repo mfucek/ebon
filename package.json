@@ -1,0 +1,15 @@
+{
+	"name": "nukleus-workspace",
+	"version": "1.0.0",
+	"description": "Nukleus Workspace",
+	"private": "true",
+	"main": "index.js",
+	"scripts": {
+		"dev": "yarn workspace @nukleus/core dev"
+	},
+	"license": "MIT",
+	"workspaces": [
+		"examples/*",
+		"packages/@nukleus:core"
+	]
+}

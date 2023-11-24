@@ -1,4 +1,4 @@
-import { add, remove } from '@nukleus/core';
+import { NukleusContainer, add } from '@nukleus/core';
 import { useEffect } from 'react';
 
 function App() {
@@ -17,8 +17,8 @@ function App() {
 					rel="noopener noreferrer"
 				>
 					Learn React {add(1, 2)}
-					Learn React {remove(1, 2)}
 				</a>
+				<NukleusContainer />
 			</header>
 		</div>
 	);
