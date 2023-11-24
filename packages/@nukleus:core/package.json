@@ -5,21 +5,28 @@
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
+	"private": "true",
 	"files": [
 		"dist"
 	],
 	"author": "Matija Fucek <contact@mfucek.com> (https://www.mfucek.com)",
 	"license": "MIT",
 	"scripts": {
-		"dev": "tsup --watch --onSuccess \"npm link\"",
+		"dev": "tsup --watch --onSuccess \"npm link && yarn workspaces run relink\"",
 		"build": "tsup && npm link",
 		"test": "jest",
-		"publish": "npm publish"
+		"publish": "npm publish",
+		"relink": "echo"
 	},
 	"dependencies": {
-		"three": "^0.158.0"
+		"three": "^0.158.0",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
 	},
 	"devDependencies": {
+		"@types/node": "^16.7.13",
+		"@types/react": "^18.0.0",
+		"@types/react-dom": "^18.0.0",
 		"@swc/core": "^1.3.99",
 		"@types/jest": "^29.5.10",
 		"@types/three": "^0.158.3",

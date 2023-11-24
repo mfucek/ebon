@@ -1,11 +1,8 @@
 import { Entity } from './modules/entity';
+import { Nukleus, NukleusContainer } from './modules/nukleus';
 
 const add = (a: number, b: number) => {
 	return a + b;
 };
 
-const remove = (a: number, b: number) => {
-	return a - b;
-};
-
-export { Entity, add, remove };
+export { Entity, Nukleus, NukleusContainer, add };
