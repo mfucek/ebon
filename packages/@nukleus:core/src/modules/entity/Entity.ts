@@ -1,3 +1,4 @@
+// import { Behaveiour } from '../behaviour';
 import { LiveEntity } from './LiveEntity';
 import {
 	FinalInitCallback,
@@ -6,71 +7,103 @@ import {
 	TickCallback
 } from './types/Callback';
 
-type InitialState = {
+type DefaultState = {
 	delta: number;
 };
 
-export class Entity<State extends InitialState> {
-	curentInit: FinalInitCallback<State>;
-	currentTick: FinalTickCallback<State>;
+export class Entity<State extends DefaultState> {
+	initCb: FinalInitCallback<State>;
+	tickCb: FinalTickCallback<State>;
 
 	constructor(previousProps?: {
-		previousInit: FinalInitCallback<State>;
-		previousTick: FinalTickCallback<State>;
+		prevInit: FinalInitCallback<State>;
+		prevTick: FinalTickCallback<State>;
 	}) {
 		// blank entity
-		if (previousProps === undefined) {
-			this.curentInit = () => ({} as State);
-			this.currentTick = () => ({});
+		if (!previousProps) {
+			this.initCb = (initialState?: Partial<State>) =>
+				initialState ? (initialState as State) : ({} as State);
+			this.tickCb = () => ({});
 			return this;
 		}
 
 		// recursive call
-		this.curentInit = previousProps.previousInit || (() => ({} as State));
-		this.currentTick = previousProps.previousTick || (() => ({} as State));
-		return this;
+		this.initCb = previousProps.prevInit || ((state) => state);
+		this.tickCb = previousProps.prevTick || ((state) => state);
 	}
 
 	init = <NewState extends {}>(newCallback: InitCallback<State, NewState>) => {
 		// pipe result of finalInit into newCallback and set as finalInit in new Entity
-		const newInitCallback = () => {
-			const currentOutput = this.curentInit();
-			const newOutput = newCallback(currentOutput);
-			const output = { ...currentOutput, ...newOutput };
-			return output;
+		const newInit = (initialState?: Partial<State>) => {
+			const oldState = this.initCb(initialState);
+			const newState = newCallback(oldState);
+			const finalState = { ...oldState, ...newState };
+			return finalState;
 		};
 
-		const newTickCallback = (_state: State & NewState) => {
-			const currentOutput = (state: State & NewState) =>
-				this.currentTick(state);
-			const output = { ...currentOutput };
-			return output;
+		const newTick = (_state: State & NewState) => {
+			const oldState = (state: State & NewState) => this.tickCb(state);
+			const finalState = { ...oldState };
+			return finalState;
 		};
 
 		return new Entity<State & NewState>({
-			previousInit: newInitCallback,
-			previousTick: newTickCallback
+			prevInit: newInit,
+			prevTick: newTick
 		});
 	};
 
 	tick = (newCallback: TickCallback<State>) => {
-		const newTickCallback = (state: State) => {
-			const currentOutput = this.currentTick(state);
-			const newOutput = newCallback({ ...state, ...currentOutput });
-			const output = { ...state, ...currentOutput, ...newOutput };
-			return output;
+		const newTick = (oldState: State) => {
+			const state = this.tickCb(oldState);
+			const newState = newCallback({ ...oldState, ...state });
+			const finalState = { ...oldState, ...state, ...newState };
+			return finalState;
 		};
 		return new Entity<State>({
-			previousInit: this.curentInit,
-			previousTick: newTickCallback
+			prevInit: this.initCb,
+			prevTick: newTick
 		});
 	};
 
-	create = () => {
-		const liveObject = new LiveEntity({
-			init: this.curentInit,
-			tick: this.currentTick
+	use = <NewState extends DefaultState>(ent: Entity<NewState>) => {
+		// use the init and tick functions from the other entity
+
+		const newInit = (initialState?: Partial<State & NewState>) => {
+			const oldState = this.initCb(initialState);
+			const newState = ent.initCb(oldState as unknown as NewState);
+
+			const finalState = { ...oldState, ...newState };
+			return finalState;
+		};
+
+		console.warn(ent.tickCb);
+
+		const newTick = (oldState: State & NewState) => {
+			// new tick not propagating...
+			const state = this.tickCb(oldState);
+			const newState = ent.tickCb({ ...oldState, ...state });
+
+			const finalState = { ...oldState, ...state, ...newState };
+			return finalState;
+		};
+
+		console.log(newTick);
+
+		return new Entity<State & NewState>({
+			prevInit: newInit,
+			prevTick: newTick
 		});
+	};
+
+	create = (initialState?: Partial<State>) => {
+		const liveObject = new LiveEntity(
+			{
+				init: this.initCb,
+				tick: this.tickCb
+			},
+			initialState
+		);
 		return liveObject;
 	};
 }

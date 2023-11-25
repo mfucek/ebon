@@ -5,7 +5,8 @@ export class Scene {
 
 	constructor() {}
 
-	addEntity(entity: LiveEntity<{}>) {
+	addEntity(entity: LiveEntity<any>) {
+		console.log(`\n\n\n[Scene]: Added entity. ${this.entities.length}\n`);
 		this.entities.push(entity);
 	}
 
@@ -14,6 +15,9 @@ export class Scene {
 	}
 
 	tick(delta: number) {
+		console.log(
+			`\n\n\n[Scene]: Ticking all ${this.entities.length} entities. ${delta}ms has passed since last tick.\n`
+		);
 		for (const entity of this.entities) {
 			entity.executeTick(delta);
 		}

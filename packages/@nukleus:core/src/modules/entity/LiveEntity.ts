@@ -1,20 +1,24 @@
-import { FinalInitCallback, FinalTickCallback } from './types/Callback';
+type FinalInitCallback<State> = (initialState?: Partial<State>) => State;
+type FinalTickCallback<State> = (state: State) => Partial<State>;
 
 export class LiveEntity<State extends {}> {
 	state: State;
 
 	private tickCallback: FinalTickCallback<State>;
 
-	constructor(behaveiour: {
-		init: FinalInitCallback<State>;
-		tick: FinalTickCallback<State>;
-	}) {
+	constructor(
+		behaveiour: {
+			init: FinalInitCallback<State>;
+			tick: FinalTickCallback<State>;
+		},
+		initialState?: Partial<State>
+	) {
 		this.tickCallback = behaveiour.tick;
 
 		// Execute initialization
-		const initialState = behaveiour.init();
+		const state = behaveiour.init(initialState);
 
-		this.state = initialState;
+		this.state = state;
 	}
 
 	executeTick = (delta: number) => {

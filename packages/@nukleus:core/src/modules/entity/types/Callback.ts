@@ -1,9 +1,9 @@
 export type InitCallback<ExposedProps, NewProps> = (
 	state: ExposedProps
-) => NewProps;
+) => NewProps; // add void as possible return type
 
-export type TickCallback<State> = (state: State) => Partial<State>;
+export type TickCallback<State> = (oldState: State) => Partial<State>;
 
-export type FinalInitCallback<State> = () => State;
+export type FinalInitCallback<State> = (initialState?: Partial<State>) => State;
 
-export type FinalTickCallback<State> = (state: State) => Partial<State>;
+export type FinalTickCallback<State> = (oldState: State) => Partial<State>;
