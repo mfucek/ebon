@@ -1,17 +1,21 @@
-export class Scene {
-	constructor() {
-		console.log('Scene');
-	}
+import { LiveEntity } from '../entity/LiveEntity';
 
-	addEntity(entity: any) {
-		console.log('Scene: ', entity);
+export class Scene {
+	entities: LiveEntity<{}>[] = [];
+
+	constructor() {}
+
+	addEntity(entity: LiveEntity<{}>) {
+		this.entities.push(entity);
 	}
 
 	init() {
-		console.log('Scene: init');
+		// console.log('Scene: init');
 	}
 
-	tick() {
-		console.log('Scene: tick');
+	tick(delta: number) {
+		for (const entity of this.entities) {
+			entity.executeTick(delta);
+		}
 	}
 }

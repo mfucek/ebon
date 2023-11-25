@@ -1,6 +1,6 @@
 import { NukleusContainer } from '@nukleus/core';
 import { useEffect } from 'react';
-import { game } from '../nukleus';
+import { game } from './nukleus';
 
 function App() {
 	useEffect(() => {
