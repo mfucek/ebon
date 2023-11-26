@@ -1,5 +1,5 @@
-import { Entity } from './modules/entity/Entity';
+import { Behaveiour } from './modules/entity/Entity';
 import { Nukleus, NukleusContainer } from './modules/nukleus';
 import { Scene } from './modules/scene';
 
-export { Entity, Nukleus, NukleusContainer, Scene };
+export { Behaveiour as Entity, Nukleus, NukleusContainer, Scene };

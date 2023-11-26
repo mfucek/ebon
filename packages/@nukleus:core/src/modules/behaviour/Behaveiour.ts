@@ -1,4 +1,5 @@
 // import { Behaveiour } from '../behaviour';
+import { Object3D } from 'three';
 import { LiveEntity } from './LiveEntity';
 import {
 	FinalInitCallback,
@@ -11,7 +12,7 @@ type DefaultState = {
 	delta: number;
 };
 
-export class Entity<State extends DefaultState> {
+export class Behaveiour<State extends DefaultState> {
 	initCb: FinalInitCallback<State>;
 	tickCb: FinalTickCallback<State>;
 
@@ -46,7 +47,7 @@ export class Entity<State extends DefaultState> {
 		const newInit = (initialState?: Partial<State>) => {
 			const oldState = this.initCb(initialState);
 			const newState = newCallback(oldState);
-			const finalState = { ...oldState, ...newState };
+			const finalState = { ...oldState, ...newState } as State & NewState;
 			return finalState;
 		};
 
@@ -57,7 +58,7 @@ export class Entity<State extends DefaultState> {
 			return finalState;
 		};
 
-		return new Entity<State & NewState>({
+		return new Behaveiour<State & NewState>({
 			prevInit: newInit,
 			prevTick: newTick
 		});
@@ -70,14 +71,14 @@ export class Entity<State extends DefaultState> {
 			const finalState = { ...oldState, ...state, ...newState };
 			return finalState;
 		};
-		return new Entity<State>({
+		return new Behaveiour<State>({
 			prevInit: this.initCb,
 			prevTick: newTick
 		});
 	};
 
 	// use implies a new init, which means new static type for internal state
-	use = <NewState extends DefaultState>(ent: Entity<NewState>) => {
+	use = <NewState extends DefaultState>(ent: Behaveiour<NewState>) => {
 		// use the init and tick functions from the other entity
 
 		const newInit = (initialState?: Partial<State & NewState>) => {
@@ -100,9 +101,7 @@ export class Entity<State extends DefaultState> {
 			return finalState;
 		};
 
-		console.log(newTick);
-
-		return new Entity<State & NewState>({
+		return new Behaveiour<State & NewState>({
 			prevInit: newInit,
 			prevTick: newTick
 		});
@@ -118,4 +117,13 @@ export class Entity<State extends DefaultState> {
 		);
 		return liveObject;
 	};
+}
+
+export class Entity<State extends DefaultState> {
+	constructor(beh: Behaveiour<State>) {
+		return beh.init((state) => {
+			const object = new Object3D();
+			return { object };
+		});
+	}
 }

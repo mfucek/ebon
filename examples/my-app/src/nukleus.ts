@@ -6,10 +6,15 @@ const nukleus = new Nukleus();
 
 // Entity
 
+const deltaBehaveiour = new Entity().init(() => {
+	return { delta: 0 };
+});
+
 const Common = new Entity<{
 	counter: number;
 	delta: number; // this will be resolved when time is implemented as a behaviour
 }>()
+	.use(deltaBehaveiour)
 	.init((state) => {
 		console.error('init c1', state);
 		const { counter } = state;
@@ -18,12 +23,12 @@ const Common = new Entity<{
 	.init((state) => {
 		console.error('init c2', state);
 		const { counter } = state;
-		return { counter: counter + 10000 };
+		// return { counter: counter + 10000 };
 	})
 	.tick((state) => {
 		console.error('tick c1', state);
 		const { counter } = state;
-		return { counter: counter + 1000 };
+		// return { counter: counter + 1000 };
 	})
 	.tick((state) => {
 		console.error('tick c2', state);
@@ -39,7 +44,7 @@ const Skeleton = new Entity<{ Acounter: number; delta: number }>()
 	.init((state) => {
 		console.log('init s2', state);
 		const { counter } = state;
-		return { counter: counter + 10 };
+		return {};
 	})
 	.tick((state) => {
 		console.log('tick s1', state);
@@ -50,7 +55,7 @@ const Skeleton = new Entity<{ Acounter: number; delta: number }>()
 	.tick((state) => {
 		console.log('tick s2', state);
 		const { counter } = state;
-		return { counter: counter + 1 };
+		return {};
 	})
 	.tick((state) => {
 		console.log('tick s3 (final state)', state);
@@ -60,8 +65,7 @@ const Skeleton = new Entity<{ Acounter: number; delta: number }>()
 // Scene
 const scene = new Scene();
 
-scene.addEntity(Skeleton.create({ Acounter: 54 }));
-// scene.addEntity(Zombie.create());
+scene.addEntity(Skeleton.create());
 
 scene.tick(1);
 scene.tick(2);
