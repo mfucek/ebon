@@ -21,17 +21,26 @@ export class Entity<State extends DefaultState> {
 	}) {
 		// blank entity
 		if (!previousProps) {
-			this.initCb = (initialState?: Partial<State>) =>
-				initialState ? (initialState as State) : ({} as State);
-			this.tickCb = () => ({});
+			const blankInit: FinalInitCallback<State> = (initialState) => {
+				return initialState as State;
+			};
+			const blankTick: FinalTickCallback<State> = (oldState) => {
+				return oldState;
+			};
+			this.initCb = blankInit;
+			this.tickCb = blankTick;
+			// this.initCb = (initialState) =>
+			// 	initialState ? (initialState as State) : ({} as State);
+			// this.tickCb = (oldState) => oldState;
 			return this;
 		}
 
 		// recursive call
-		this.initCb = previousProps.prevInit || ((state) => state);
-		this.tickCb = previousProps.prevTick || ((state) => state);
+		this.initCb = previousProps.prevInit;
+		this.tickCb = previousProps.prevTick;
 	}
 
+	// new init means new static type for internal state
 	init = <NewState extends {}>(newCallback: InitCallback<State, NewState>) => {
 		// pipe result of finalInit into newCallback and set as finalInit in new Entity
 		const newInit = (initialState?: Partial<State>) => {
@@ -42,7 +51,8 @@ export class Entity<State extends DefaultState> {
 		};
 
 		const newTick = (_state: State & NewState) => {
-			const oldState = (state: State & NewState) => this.tickCb(state);
+			const oldState = this.tickCb(_state) as State & NewState;
+			// const oldState = (state: State & NewState) => this.tickCb(state);
 			const finalState = { ...oldState };
 			return finalState;
 		};
@@ -66,6 +76,7 @@ export class Entity<State extends DefaultState> {
 		});
 	};
 
+	// use implies a new init, which means new static type for internal state
 	use = <NewState extends DefaultState>(ent: Entity<NewState>) => {
 		// use the init and tick functions from the other entity
 
@@ -77,9 +88,10 @@ export class Entity<State extends DefaultState> {
 			return finalState;
 		};
 
-		console.warn(ent.tickCb);
+		// console.warn(ent.tickCb);
 
 		const newTick = (oldState: State & NewState) => {
+			console.error('TEST');
 			// new tick not propagating...
 			const state = this.tickCb(oldState);
 			const newState = ent.tickCb({ ...oldState, ...state });

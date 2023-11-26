@@ -15,7 +15,7 @@ export class Scene {
 	}
 
 	tick(delta: number) {
-		console.log(
+		console.warn(
 			`\n\n\n[Scene]: Ticking all ${this.entities.length} entities. ${delta}ms has passed since last tick.\n`
 		);
 		for (const entity of this.entities) {
