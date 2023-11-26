@@ -1,4 +1,4 @@
-import { Entity, Nukleus, Scene } from '@nukleus/core';
+import { Behaveiour, Entity, Nukleus, Scene } from '@nukleus/core';
 
 console.clear();
 
@@ -6,15 +6,11 @@ const nukleus = new Nukleus();
 
 // Entity
 
-const deltaBehaveiour = new Entity().init(() => {
-	return { delta: 0 };
-});
+// const deltaBehaveiour = new Entity().init(() => {
+// 	return { delta: 0 };
+// });
 
-const Common = new Entity<{
-	counter: number;
-	delta: number; // this will be resolved when time is implemented as a behaviour
-}>()
-	.use(deltaBehaveiour)
+const Common = new Behaveiour<{ counter: number; delta: number }>()
 	.init((state) => {
 		console.error('init c1', state);
 		const { counter } = state;
@@ -22,12 +18,12 @@ const Common = new Entity<{
 	})
 	.init((state) => {
 		console.error('init c2', state);
-		const { counter } = state;
+		// const { counter } = state;
 		// return { counter: counter + 10000 };
 	})
 	.tick((state) => {
 		console.error('tick c1', state);
-		const { counter } = state;
+		// const { counter } = state;
 		// return { counter: counter + 1000 };
 	})
 	.tick((state) => {
@@ -36,14 +32,15 @@ const Common = new Entity<{
 		return { counter: counter + 1000 };
 	});
 
-const Skeleton = new Entity<{ Acounter: number; delta: number }>()
-	.init((state) => {
-		console.log('init s1', state);
-		return { counter: 10 };
-	})
+// const Skeleton = new Entity<{ Acounter: number; delta: number }>()
+const skeleton = Entity.init((state) => {
+	console.log(state.object.toJSON());
+	console.log('init s1', state);
+	return { counter: 10 };
+})
 	.init((state) => {
 		console.log('init s2', state);
-		const { counter } = state;
+		// const { counter } = state;
 		return {};
 	})
 	.tick((state) => {
@@ -54,7 +51,7 @@ const Skeleton = new Entity<{ Acounter: number; delta: number }>()
 	.use(Common)
 	.tick((state) => {
 		console.log('tick s2', state);
-		const { counter } = state;
+		// const { counter } = state;
 		return {};
 	})
 	.tick((state) => {
@@ -65,10 +62,14 @@ const Skeleton = new Entity<{ Acounter: number; delta: number }>()
 // Scene
 const scene = new Scene();
 
-scene.addEntity(Skeleton.create());
+scene.addEntity(skeleton);
 
 scene.tick(1);
 scene.tick(2);
+
+nukleus.setScene(scene);
+
+// nukleus.start();
 
 // scene.tick(2);
 

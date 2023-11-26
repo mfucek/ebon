@@ -16,7 +16,7 @@ export class LiveEntity<State extends {}> {
 		this.tickCallback = behaveiour.tick;
 
 		// Execute initialization
-		const state = behaveiour.init(initialState);
+		const state = behaveiour.init({ ...initialState });
 
 		this.state = state;
 	}

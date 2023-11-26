@@ -13,12 +13,13 @@
 	"license": "MIT",
 	"scripts": {
 		"dev": "tsup --watch --onSuccess \"npm link && yarn workspaces run relink\"",
-		"build": "tsup && npm link",
+		"build": "tsup --minify && npm link",
 		"test": "jest",
 		"publish": "npm publish",
 		"relink": "echo"
 	},
-	"dependencies": {
+	"dependencies": {},
+	"peerDependencies": {
 		"three": "^0.158.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0"

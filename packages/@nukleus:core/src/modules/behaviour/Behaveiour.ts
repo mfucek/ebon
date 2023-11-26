@@ -1,20 +1,19 @@
 // import { Behaveiour } from '../behaviour';
-import { Object3D } from 'three';
-import { LiveEntity } from './LiveEntity';
+import { LiveEntity } from '../entity/LiveEntity';
 import {
 	FinalInitCallback,
 	FinalTickCallback,
 	InitCallback,
 	TickCallback
-} from './types/Callback';
+} from '../entity/types/Callback';
 
 type DefaultState = {
 	delta: number;
 };
 
 export class Behaveiour<State extends DefaultState> {
-	initCb: FinalInitCallback<State>;
-	tickCb: FinalTickCallback<State>;
+	private initCb: FinalInitCallback<State>;
+	private tickCb: FinalTickCallback<State>;
 
 	constructor(previousProps?: {
 		prevInit: FinalInitCallback<State>;
@@ -30,9 +29,7 @@ export class Behaveiour<State extends DefaultState> {
 			};
 			this.initCb = blankInit;
 			this.tickCb = blankTick;
-			// this.initCb = (initialState) =>
-			// 	initialState ? (initialState as State) : ({} as State);
-			// this.tickCb = (oldState) => oldState;
+
 			return this;
 		}
 
@@ -42,6 +39,11 @@ export class Behaveiour<State extends DefaultState> {
 	}
 
 	// new init means new static type for internal state
+
+	/**
+	 * Init lets you set the initial state of the entity.
+	 * @template newCallback - The function to be called when the entity is created.
+	 */
 	init = <NewState extends {}>(newCallback: InitCallback<State, NewState>) => {
 		// pipe result of finalInit into newCallback and set as finalInit in new Entity
 		const newInit = (initialState?: Partial<State>) => {
@@ -53,7 +55,7 @@ export class Behaveiour<State extends DefaultState> {
 
 		const newTick = (_state: State & NewState) => {
 			const oldState = this.tickCb(_state) as State & NewState;
-			// const oldState = (state: State & NewState) => this.tickCb(state);
+
 			const finalState = { ...oldState };
 			return finalState;
 		};
@@ -64,6 +66,10 @@ export class Behaveiour<State extends DefaultState> {
 		});
 	};
 
+	/**
+	 * Tick lets define how the entity's state changes over time.
+	 * @template newCallback - The function to be called when the entity is ticked.
+	 */
 	tick = (newCallback: TickCallback<State>) => {
 		const newTick = (oldState: State) => {
 			const state = this.tickCb(oldState);
@@ -78,9 +84,11 @@ export class Behaveiour<State extends DefaultState> {
 	};
 
 	// use implies a new init, which means new static type for internal state
+	/**
+	 * Use lets you use another entity's init and tick functions.
+	 * @template ent - The entity to be used.
+	 */
 	use = <NewState extends DefaultState>(ent: Behaveiour<NewState>) => {
-		// use the init and tick functions from the other entity
-
 		const newInit = (initialState?: Partial<State & NewState>) => {
 			const oldState = this.initCb(initialState);
 			const newState = ent.initCb(oldState as unknown as NewState);
@@ -89,11 +97,7 @@ export class Behaveiour<State extends DefaultState> {
 			return finalState;
 		};
 
-		// console.warn(ent.tickCb);
-
 		const newTick = (oldState: State & NewState) => {
-			console.error('TEST');
-			// new tick not propagating...
 			const state = this.tickCb(oldState);
 			const newState = ent.tickCb({ ...oldState, ...state });
 
@@ -117,13 +121,4 @@ export class Behaveiour<State extends DefaultState> {
 		);
 		return liveObject;
 	};
-}
-
-export class Entity<State extends DefaultState> {
-	constructor(beh: Behaveiour<State>) {
-		return beh.init((state) => {
-			const object = new Object3D();
-			return { object };
-		});
-	}
 }
