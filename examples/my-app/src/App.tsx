@@ -4,7 +4,7 @@ import { game } from './nukleus';
 function App() {
 	return (
 		<main className="App">
-			<NukleusContainer windowSized script={game} />
+			<NukleusContainer script={game} />
 		</main>
 	);
 }

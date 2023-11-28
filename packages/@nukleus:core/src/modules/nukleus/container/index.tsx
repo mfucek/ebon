@@ -1,40 +1,37 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
+import { Nukleus } from '../Nukleus';
 
 interface NukleusContainerProps {
-	script?: any;
-	windowSized?: boolean;
+	script?: Nukleus;
 }
 
 export const NukleusContainer: FC<NukleusContainerProps> = ({
-	script,
-	windowSized
+	script: nukleus
 }) => {
+	const canvasContainerRef = useRef<HTMLDivElement>(null);
+
 	useEffect(() => {
-		console.log('Container initialized');
-		if (!script) {
+		if (!nukleus) {
 			console.error(
 				'No script provided. Please provide a script in NukleusContainer to initialize.'
 			);
 			return;
 		}
-		// script();
+
+		if (!canvasContainerRef.current) {
+			return;
+		}
+
+		nukleus.initialize(canvasContainerRef.current!);
+		console.log('Container initialized');
+		nukleus.start();
+		console.log('Script started');
 	}, []);
 
-	const styles: React.CSSProperties = windowSized
-		? {
-				width: '100vw',
-				height: '100vh',
-				background: 'red'
-		  }
-		: {
-				width: '100%',
-				height: '100%',
-				background: 'red'
-		  };
+	const styles: React.CSSProperties = {
+		width: '100vw',
+		height: '100vh'
+	};
 
-	return (
-		<div style={styles}>
-			<canvas id="nukleus-canvas" />
-		</div>
-	);
+	return <div style={styles} ref={canvasContainerRef} />;
 };

@@ -1,4 +1,4 @@
-import { Object3D } from 'three';
+import * as THREE from 'three';
 import { Behaveiour } from '../behaviour/Behaveiour';
 
 // type DefaultState = {
@@ -23,8 +23,11 @@ import { Behaveiour } from '../behaviour/Behaveiour';
 // });
 
 const initializeThreeObject = new Behaveiour().init(() => {
-	const object = new Object3D();
-	return { object };
+	const cube = new THREE.Mesh(
+		new THREE.BoxGeometry().translate(0, 0, 0.5),
+		new THREE.MeshPhongMaterial({ color: 0x444444 })
+	);
+	return { object: cube };
 });
 
 export const Entity = new Behaveiour().use(initializeThreeObject);
