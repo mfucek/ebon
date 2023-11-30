@@ -23,7 +23,7 @@ export class Scene {
 
 		this.activeCamera = new THREE.PerspectiveCamera(75, 0.5, 0.1, 1000);
 		this.activeCamera.up.set(0, 0, 1);
-		this.activeCamera.position.set(-2, 5, 5);
+		this.activeCamera.position.set(-2, 5, 3).multiplyScalar(2);
 		this.activeCamera.lookAt(0, 0, 0);
 		this.sceneThree.add(this.activeCamera);
 
@@ -37,6 +37,10 @@ export class Scene {
 		light.shadow.mapSize.height = 512; // default
 		light.shadow.camera.near = 0.5; // default
 		light.shadow.camera.far = 500; // default
+
+		const light3 = new THREE.PointLight(0xffffff, 10);
+		light3.position.set(3, -2, 3);
+		this.sceneThree.add(light3);
 
 		const light2 = new THREE.AmbientLight(0xffffff, 0.7);
 		this.sceneThree.add(light2);

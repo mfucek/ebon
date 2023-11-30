@@ -56,9 +56,7 @@ const Floor = Entity.init(({ object }) => {
 	const plane = new THREE.Mesh(
 		new THREE.CircleGeometry(4, 64),
 		new THREE.MeshPhongMaterial({
-			color: '#ffffff',
-			specular: '#ffffff',
-			shininess: 0.5
+			color: '#222222'
 		})
 	);
 	plane.receiveShadow = true;
