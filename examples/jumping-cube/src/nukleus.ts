@@ -26,16 +26,14 @@ const Cube = Entity.use(AgeTracker)
 		cube.castShadow = true;
 		cube.receiveShadow = false;
 
-		// define speed
-		const jumpTime = 1200; // make a jump last 1000ms
+		// make a jump last 1200ms
+		const jumpTime = 1200;
 		return { object: cube, jumpTime };
 	})
 	.tick(({ age, object, jumpTime }) => {
 		const jumpProgress = (age % jumpTime) / jumpTime;
 
-		// object.rotation.z = age / 100;
 		if (jumpProgress < 0.2) {
-			// object.position.z = Math.cos((age / 100) * speedZ) + 1;
 			object.scale.z = 1 - jumpProgress * 2;
 		}
 
@@ -47,8 +45,8 @@ const Cube = Entity.use(AgeTracker)
 				-Math.cos(2 * 3.14 * (relativeProgress * 1.4 - 0.7) ** 2 + 3.14) + 1;
 		}
 
-		if (0.3 <= jumpProgress && jumpProgress <= 0.65) {
-			const relativeProgress = (jumpProgress - 0.3) / 0.35;
+		if (0.3 <= jumpProgress && jumpProgress <= 0.45) {
+			const relativeProgress = (jumpProgress - 0.3) / 0.15;
 			object.scale.z = 0.6 + relativeProgress * 0.4;
 		}
 	});
