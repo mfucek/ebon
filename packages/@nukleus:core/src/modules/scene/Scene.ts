@@ -12,32 +12,34 @@ export class Scene {
 
 	constructor() {
 		this.sceneThree = new THREE.Scene();
+
 		this.rendererThree = new THREE.WebGLRenderer({ antialias: true });
-		this.activeCamera = new THREE.PerspectiveCamera(75, 0.5, 0.1, 1000);
+		this.rendererThree.shadowMap.enabled = true;
+		this.rendererThree.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 
 		this.rendererThree.setSize(100, 100);
 		// this.rendererThree.setClearColor(0x000000, 1);
 		// this.rendererThree.setPixelRatio(window.devicePixelRatio);
 
-		this.activeCamera.position.set(0, -5, 5);
-		this.activeCamera.lookAt(0, 0, 0);
-
-		this.activeCamera.position.set(0, -5, 5);
+		this.activeCamera = new THREE.PerspectiveCamera(75, 0.5, 0.1, 1000);
+		this.activeCamera.up.set(0, 0, 1);
+		this.activeCamera.position.set(-2, 5, 5);
 		this.activeCamera.lookAt(0, 0, 0);
 		this.sceneThree.add(this.activeCamera);
 
-		const light = new THREE.DirectionalLight(0xffffff);
-		light.position.set(10, 0, 10);
+		const light = new THREE.DirectionalLight(0xffffff, 1);
+		light.position.set(-2, 1, 2); //default; light shining from top
+		light.castShadow = true; // default false
 		this.sceneThree.add(light);
 
-		const light2 = new THREE.AmbientLight(0xffffff, 0.5);
-		this.sceneThree.add(light2);
+		//Set up shadow properties for the light
+		light.shadow.mapSize.width = 512; // default
+		light.shadow.mapSize.height = 512; // default
+		light.shadow.camera.near = 0.5; // default
+		light.shadow.camera.far = 500; // default
 
-		const plane = new THREE.Mesh(
-			new THREE.PlaneGeometry(10, 10),
-			new THREE.MeshPhongMaterial({ color: 0xffffff })
-		);
-		this.sceneThree.add(plane);
+		const light2 = new THREE.AmbientLight(0xffffff, 0.7);
+		this.sceneThree.add(light2);
 	}
 
 	addEntity(entity: typeof Entity) {
@@ -46,6 +48,10 @@ export class Scene {
 
 		this.entities.push(liveEntity);
 		this.sceneThree.add(liveEntity.state.object);
+	}
+
+	setCamera(camera: THREE.PerspectiveCamera) {
+		this.activeCamera = camera;
 	}
 
 	render() {
