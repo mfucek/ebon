@@ -1,8 +1,11 @@
+import { nanoid } from 'nanoid';
+
 type FinalInitCallback<State> = (initialState?: Partial<State>) => State;
 type FinalTickCallback<State> = (state: State) => Partial<State>;
 
 export class LiveEntity<State extends {}> {
 	state: State;
+	id: string;
 
 	private tickCallback: FinalTickCallback<State>;
 
@@ -19,6 +22,8 @@ export class LiveEntity<State extends {}> {
 		const state = behaveiour.init({ ...initialState });
 
 		this.state = state;
+
+		this.id = nanoid();
 	}
 
 	executeTick = (delta: number) => {
