@@ -4,7 +4,10 @@ import { game } from './nukleus';
 function App() {
 	return (
 		<main className="App">
-			<NukleusContainer script={game} />
+			<NukleusContainer
+				script={game}
+				style={{ background: 'linear-gradient(-45deg, #131313, #3a3a3a)' }}
+			/>
 		</main>
 	);
 }

@@ -2,27 +2,15 @@ import { Behavior } from '../behavior/Behavior';
 import { Nukleus } from '../nukleus/Nukleus';
 
 export class KeyboardController {
-	// static singleton: KeyboardController;
-	// constructor() {
-	// 	if (KeyboardController.singleton) {
-	// 		return KeyboardController.singleton;
-	// 	}
-	// 	console.log('KeyboardController');
-	// 	KeyboardController.singleton = this;
-	// }
-
 	keys: Record<string, boolean> = {};
 
-	// getEventListeners = (): Partial<HTMLAttributes<HTMLCanvasElement>> => {
 	getKeyboardCallbacks = (): Record<string, (ev: KeyboardEvent) => void> => {
 		return {
 			onKeyDown: (ev) => {
 				this.keys[ev.key] = true;
-				console.log('onKeyDown', ev.key);
 			},
 			onKeyUp: (ev) => {
 				this.keys[ev.key] = false;
-				console.log('onKeyUp', ev.key);
 			}
 		};
 	};

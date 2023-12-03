@@ -66,14 +66,12 @@ class Nukleus {
 		canvas.style.width = '100%';
 		canvas.style.height = '100%';
 		canvas.tabIndex = 1;
-		const a = (ev: KeyboardEvent) => {
-			console.log('a');
-			console.log('onKeyDown', ev.key);
-		};
+
 		canvas.addEventListener('keydown', keyboardCallbacks.onKeyDown);
 		canvas.addEventListener('keyup', keyboardCallbacks.onKeyUp);
 
 		this.container.appendChild(canvas);
+		canvas.focus();
 
 		const handleResize = () => {
 			if (!this.container) {

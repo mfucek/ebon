@@ -13,7 +13,10 @@ export class Scene {
 	constructor() {
 		this.sceneThree = new THREE.Scene();
 
-		this.rendererThree = new THREE.WebGLRenderer({ antialias: true });
+		this.rendererThree = new THREE.WebGLRenderer({
+			antialias: true,
+			alpha: true
+		});
 		this.rendererThree.shadowMap.enabled = true;
 		this.rendererThree.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 

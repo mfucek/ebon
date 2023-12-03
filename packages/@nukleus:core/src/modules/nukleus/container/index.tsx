@@ -1,15 +1,13 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, HTMLAttributes, useEffect, useRef } from 'react';
 import { Nukleus } from '../Nukleus';
 
 interface NukleusContainerProps {
 	script?: Nukleus;
 }
 
-export const NukleusContainer: FC<NukleusContainerProps> = ({
-	script: nukleus
-}) => {
-	// const keyboardController = new KeyboardController();
-
+export const NukleusContainer: FC<
+	HTMLAttributes<HTMLDivElement> & NukleusContainerProps
+> = ({ script: nukleus, style, ...rest }) => {
 	const canvasContainerRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -37,17 +35,15 @@ export const NukleusContainer: FC<NukleusContainerProps> = ({
 
 	const styles: React.CSSProperties = {
 		width: '100vw',
-		height: '100vh',
-		backgroundColor: 'red'
+		height: '100vh'
 	};
 
 	return (
 		<div
 			id="nukleus-container"
-			style={styles}
+			style={{ ...styles, ...style }}
 			ref={canvasContainerRef}
-			// tabIndex={0}
-			// {...keyboardController.register}
+			{...rest}
 		/>
 	);
 };

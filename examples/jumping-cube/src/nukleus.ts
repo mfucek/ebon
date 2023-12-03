@@ -15,45 +15,23 @@ const AgeTracker = new Behavior()
 		return { age: age + delta };
 	});
 
-// Entity
-const Cube = Entity.use(AgeTracker)
-	.use(
-		new Keyboard(nukleus, {
-			up: 'w',
-			down: 's',
-			left: 'a',
-			right: 'd'
-		}).register()
-	)
-	.tick(({ keyboard, object, delta }) => {
-		if (keyboard.left) {
-			object.position.x += 0.01 * delta;
-		}
-		if (keyboard.right) {
-			object.position.x -= 0.01 * delta;
-		}
-		if (keyboard.up) {
-			object.position.y -= 0.01 * delta;
-		}
-		if (keyboard.down) {
-			object.position.y += 0.01 * delta;
-		}
-	})
+const Jumping = new Behavior<{
+	age: number;
+	delta: number;
+	object: THREE.Object3D;
+}>()
 	.init(() => {
-		// create cube
-		const cube: THREE.Mesh<any, any> = new THREE.Mesh(
-			new RoundedBoxGeometry(1, 1, 1, 6, 0.2).translate(0, 0, 0.5),
-			new THREE.MeshStandardMaterial({ color: '#ff8f87', roughness: 0.2 })
-		);
-		cube.castShadow = true;
-		cube.receiveShadow = false;
-
-		// make a jump last 1200ms
-		const jumpTime = 1200;
-		return { object: cube, jumpTime };
+		return {
+			jumpDuration: 1000,
+			isJumping: false,
+			jumpStart: 0,
+			jumpHeight: 2
+		};
 	})
-	.tick(({ age, object, jumpTime }) => {
-		const jumpProgress = (age % jumpTime) / jumpTime;
+	.tick(({ age, object, jumpDuration, jumpStart, isJumping, jumpHeight }) => {
+		if (!isJumping) return;
+
+		const jumpProgress = ((age - jumpStart) % jumpDuration) / jumpDuration;
 
 		if (jumpProgress < 0.2) {
 			object.scale.z = 1 - jumpProgress * 2;
@@ -64,12 +42,83 @@ const Cube = Entity.use(AgeTracker)
 			// https://graphtoy.com/
 			// z = -cos ( 2𝜋 * (1.4*x - 0.7)^2 + 𝜋) + 1
 			object.position.z =
-				-Math.cos(2 * 3.14 * (relativeProgress * 1.4 - 0.7) ** 2 + 3.14) + 1;
+				(-Math.cos(2 * 3.14 * (relativeProgress * 1.4 - 0.7) ** 2 + 3.14) + 1) *
+				jumpHeight;
 		}
 
 		if (0.3 <= jumpProgress && jumpProgress <= 0.45) {
 			const relativeProgress = (jumpProgress - 0.3) / 0.15;
 			object.scale.z = 0.6 + relativeProgress * 0.4;
+		}
+
+		if (isJumping && age > jumpStart + jumpDuration) {
+			object.scale.z = 1;
+			object.position.z = 0;
+			return { isJumping: false };
+		}
+	});
+
+const clamp = (value: number, min: number, max: number) => {
+	return Math.min(Math.max(value, min), max);
+};
+
+const SmoothMovement = new Behavior<{ object: THREE.Object3D; delta: number }>()
+	.init(() => {
+		return {
+			speedX: 0,
+			speedY: 0,
+			friction: 0.05,
+			acceleration: 0.0001,
+			maxSpeed: 0.02
+		};
+	})
+	.tick(({ speedX, speedY, friction, object, delta, maxSpeed }) => {
+		const newSpeedX = clamp(speedX * (1 - friction), -maxSpeed, maxSpeed); // + speedX * delta;
+		const newSpeedY = clamp(speedY * (1 - friction), -maxSpeed, maxSpeed); // + speedY * delta;
+
+		object.position.x += newSpeedX * delta;
+		object.position.y += newSpeedY * delta;
+
+		return { speedX: newSpeedX, speedY: newSpeedY };
+	});
+
+const Movement = new Behavior<{ object: THREE.Object3D; delta: number }>()
+	.use(
+		new Keyboard(nukleus, {
+			up: 'w',
+			down: 's',
+			left: 'a',
+			right: 'd',
+			jump: ' '
+		}).register()
+	)
+	.use(SmoothMovement)
+	.tick(({ keyboard, object, delta, speedX, speedY, acceleration }) => {
+		if (keyboard.left) speedX += acceleration * delta;
+		if (keyboard.right) speedX -= acceleration * delta;
+		if (keyboard.up) speedY -= acceleration * delta;
+		if (keyboard.down) speedY += acceleration * delta;
+		return { speedX, speedY };
+	});
+
+// Entity
+const Cube = Entity.use(AgeTracker)
+	.init(() => {
+		// create cube
+		const cube: THREE.Mesh<any, any> = new THREE.Mesh(
+			new RoundedBoxGeometry(1, 1, 1, 6, 0.2).translate(0, 0, 0.5),
+			new THREE.MeshStandardMaterial({ color: '#ff8f87', roughness: 0.2 })
+		);
+		cube.castShadow = true;
+		cube.receiveShadow = false;
+
+		return { object: cube };
+	})
+	.use(Movement)
+	.use(Jumping)
+	.tick(({ keyboard, isJumping, age, object }) => {
+		if (keyboard.jump && !isJumping) {
+			return { isJumping: true, jumpStart: age };
 		}
 	});
 

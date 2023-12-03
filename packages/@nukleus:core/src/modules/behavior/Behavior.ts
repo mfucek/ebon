@@ -38,10 +38,9 @@ export class Behavior<State extends DefaultState> {
 		this.tickCb = previousProps.prevTick;
 	}
 
-	// new init means new static type for internal state
-
 	/**
-	 * Init lets you set the initial state of the entity.
+	 * Init lets you define the initial states of an entity.
+	 * Init can be called multiple times to add more initial states or refine existing ones.
 	 * @template newCallback - The function to be called when the entity is created.
 	 */
 	init = <NewState extends {}>(newCallback: InitCallback<State, NewState>) => {
@@ -67,7 +66,8 @@ export class Behavior<State extends DefaultState> {
 	};
 
 	/**
-	 * Tick lets define how the entity's state changes over time.
+	 * Tick defines how an entity's state changes over time. It receives the current state as an argument, as defined by all the init functions.
+	 * Tick can be called multiple times to add more state changes.
 	 * @template newCallback - The function to be called when the entity is ticked.
 	 */
 	tick = (newCallback: TickCallback<State>) => {
