@@ -11,7 +11,7 @@ type DefaultState = {
 	delta: number;
 };
 
-export class Behaveiour<State extends DefaultState> {
+export class Behavior<State extends DefaultState> {
 	private initCb: FinalInitCallback<State>;
 	private tickCb: FinalTickCallback<State>;
 
@@ -60,7 +60,7 @@ export class Behaveiour<State extends DefaultState> {
 			return finalState;
 		};
 
-		return new Behaveiour<State & NewState>({
+		return new Behavior<State & NewState>({
 			prevInit: newInit,
 			prevTick: newTick
 		});
@@ -77,7 +77,7 @@ export class Behaveiour<State extends DefaultState> {
 			const finalState = { ...oldState, ...state, ...newState };
 			return finalState;
 		};
-		return new Behaveiour<State>({
+		return new Behavior<State>({
 			prevInit: this.initCb,
 			prevTick: newTick
 		});
@@ -88,7 +88,7 @@ export class Behaveiour<State extends DefaultState> {
 	 * Use lets you use another entity's init and tick functions.
 	 * @template ent - The entity to be used.
 	 */
-	use = <NewState extends DefaultState>(ent: Behaveiour<NewState>) => {
+	use = <NewState extends DefaultState>(ent: Behavior<NewState>) => {
 		const newInit = (initialState?: Partial<State & NewState>) => {
 			const oldState = this.initCb(initialState);
 			const newState = ent.initCb(oldState as unknown as NewState);
@@ -105,7 +105,7 @@ export class Behaveiour<State extends DefaultState> {
 			return finalState;
 		};
 
-		return new Behaveiour<State & NewState>({
+		return new Behavior<State & NewState>({
 			prevInit: newInit,
 			prevTick: newTick
 		});

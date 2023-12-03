@@ -8,6 +8,8 @@ interface NukleusContainerProps {
 export const NukleusContainer: FC<NukleusContainerProps> = ({
 	script: nukleus
 }) => {
+	// const keyboardController = new KeyboardController();
+
 	const canvasContainerRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -22,16 +24,30 @@ export const NukleusContainer: FC<NukleusContainerProps> = ({
 			return;
 		}
 
-		nukleus.initialize(canvasContainerRef.current!);
+		const cleanup = nukleus.initialize(canvasContainerRef.current!);
 		console.log('Container initialized');
 		nukleus.start();
 		console.log('Script started');
+
+		return () => {
+			cleanup();
+			console.log('Container cleaned up');
+		};
 	}, []);
 
 	const styles: React.CSSProperties = {
 		width: '100vw',
-		height: '100vh'
+		height: '100vh',
+		backgroundColor: 'red'
 	};
 
-	return <div style={styles} ref={canvasContainerRef} />;
+	return (
+		<div
+			id="nukleus-container"
+			style={styles}
+			ref={canvasContainerRef}
+			// tabIndex={0}
+			// {...keyboardController.register}
+		/>
+	);
 };

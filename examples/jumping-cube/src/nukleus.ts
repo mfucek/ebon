@@ -1,4 +1,4 @@
-import { Behaveiour, Entity, Nukleus, Scene } from '@nukleus/core';
+import { Behavior, Entity, Keyboard, Nukleus, Scene } from '@nukleus/core';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 
@@ -7,7 +7,7 @@ console.clear();
 const nukleus = new Nukleus();
 
 // Age
-const AgeTracker = new Behaveiour()
+const AgeTracker = new Behavior()
 	.init(() => {
 		return { age: 0 };
 	})
@@ -17,6 +17,28 @@ const AgeTracker = new Behaveiour()
 
 // Entity
 const Cube = Entity.use(AgeTracker)
+	.use(
+		new Keyboard(nukleus, {
+			up: 'w',
+			down: 's',
+			left: 'a',
+			right: 'd'
+		}).register()
+	)
+	.tick(({ keyboard, object, delta }) => {
+		if (keyboard.left) {
+			object.position.x += 0.01 * delta;
+		}
+		if (keyboard.right) {
+			object.position.x -= 0.01 * delta;
+		}
+		if (keyboard.up) {
+			object.position.y -= 0.01 * delta;
+		}
+		if (keyboard.down) {
+			object.position.y += 0.01 * delta;
+		}
+	})
 	.init(() => {
 		// create cube
 		const cube: THREE.Mesh<any, any> = new THREE.Mesh(
