@@ -1,4 +1,5 @@
 // import { Behaveiour } from '../behaviour';
+import { nanoid } from 'nanoid';
 import { LiveEntity } from '../entity/LiveEntity';
 import {
 	FinalInitCallback,
@@ -7,17 +8,20 @@ import {
 	TickCallback
 } from '../entity/types/Callback';
 
-type DefaultState = {
+export type DefaultState = {
 	delta: number;
 };
 
 export class Behavior<State extends DefaultState> {
-	private initCb: FinalInitCallback<State>;
-	private tickCb: FinalTickCallback<State>;
+	_initCb: FinalInitCallback<State>;
+	_tickCb: FinalTickCallback<State>;
+
+	_id = nanoid();
 
 	constructor(previousProps?: {
 		prevInit: FinalInitCallback<State>;
 		prevTick: FinalTickCallback<State>;
+		prevActions: Record<string, TickCallback<State>>;
 	}) {
 		// blank entity
 		if (!previousProps) {
@@ -27,15 +31,17 @@ export class Behavior<State extends DefaultState> {
 			const blankTick: FinalTickCallback<State> = (oldState) => {
 				return oldState;
 			};
-			this.initCb = blankInit;
-			this.tickCb = blankTick;
+			this._initCb = blankInit;
+			this._tickCb = blankTick;
+			this.actions = {};
 
 			return this;
 		}
 
 		// recursive call
-		this.initCb = previousProps.prevInit;
-		this.tickCb = previousProps.prevTick;
+		this._initCb = previousProps.prevInit;
+		this._tickCb = previousProps.prevTick;
+		this.actions = previousProps.prevActions;
 	}
 
 	/**
@@ -46,14 +52,14 @@ export class Behavior<State extends DefaultState> {
 	init = <NewState extends {}>(newCallback: InitCallback<State, NewState>) => {
 		// pipe result of finalInit into newCallback and set as finalInit in new Entity
 		const newInit = (initialState?: Partial<State>) => {
-			const oldState = this.initCb(initialState);
+			const oldState = this._initCb(initialState);
 			const newState = newCallback(oldState);
 			const finalState = { ...oldState, ...newState } as State & NewState;
 			return finalState;
 		};
 
 		const newTick = (_state: State & NewState) => {
-			const oldState = this.tickCb(_state) as State & NewState;
+			const oldState = this._tickCb(_state) as State & NewState;
 
 			const finalState = { ...oldState };
 			return finalState;
@@ -61,7 +67,11 @@ export class Behavior<State extends DefaultState> {
 
 		return new Behavior<State & NewState>({
 			prevInit: newInit,
-			prevTick: newTick
+			prevTick: newTick,
+			prevActions: this.actions as Record<
+				string,
+				TickCallback<State & NewState>
+			>
 		});
 	};
 
@@ -72,14 +82,15 @@ export class Behavior<State extends DefaultState> {
 	 */
 	tick = (newCallback: TickCallback<State>) => {
 		const newTick = (oldState: State) => {
-			const state = this.tickCb(oldState);
+			const state = this._tickCb(oldState);
 			const newState = newCallback({ ...oldState, ...state });
 			const finalState = { ...oldState, ...state, ...newState };
 			return finalState;
 		};
 		return new Behavior<State>({
-			prevInit: this.initCb,
-			prevTick: newTick
+			prevInit: this._initCb,
+			prevTick: newTick,
+			prevActions: this.actions
 		});
 	};
 
@@ -90,16 +101,16 @@ export class Behavior<State extends DefaultState> {
 	 */
 	use = <NewState extends DefaultState>(ent: Behavior<NewState>) => {
 		const newInit = (initialState?: Partial<State & NewState>) => {
-			const oldState = this.initCb(initialState);
-			const newState = ent.initCb(oldState as unknown as NewState);
+			const oldState = this._initCb(initialState);
+			const newState = ent._initCb(oldState as unknown as NewState);
 
 			const finalState = { ...oldState, ...newState };
 			return finalState;
 		};
 
 		const newTick = (oldState: State & NewState) => {
-			const state = this.tickCb(oldState);
-			const newState = ent.tickCb({ ...oldState, ...state });
+			const state = this._tickCb(oldState);
+			const newState = ent._tickCb({ ...oldState, ...state });
 
 			const finalState = { ...oldState, ...state, ...newState };
 			return finalState;
@@ -107,18 +118,28 @@ export class Behavior<State extends DefaultState> {
 
 		return new Behavior<State & NewState>({
 			prevInit: newInit,
-			prevTick: newTick
+			prevTick: newTick,
+			prevActions: { ...this.actions, ...ent.actions } as Record<
+				string,
+				TickCallback<State & NewState>
+			>
 		});
 	};
 
+	actions: Record<string, TickCallback<State>> = {};
+
+	/**
+	 * Action lets you define a function that can be called from outside the entity.
+	 * @template name - The name of the action.
+	 * @template actionCb - The function to be called when the action is executed.
+	 */
+	action = (name: string, actionCb: TickCallback<State>) => {
+		this.actions[name] = actionCb;
+		return this;
+	};
+
 	create = (initialState?: Partial<State>) => {
-		const liveObject = new LiveEntity(
-			{
-				init: this.initCb,
-				tick: this.tickCb
-			},
-			initialState
-		);
+		const liveObject = new LiveEntity(this, initialState);
 		return liveObject;
 	};
 }

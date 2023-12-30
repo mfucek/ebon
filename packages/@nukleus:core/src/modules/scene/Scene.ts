@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Entity } from '../..';
+import { Behavior, DefaultState } from '../behavior/Behavior';
 import { LiveEntity } from '../entity/LiveEntity';
 
 export class Scene {
@@ -49,13 +49,17 @@ export class Scene {
 		this.sceneThree.add(light2);
 	}
 
-	addEntity(entity: typeof Entity) {
+	addEntity = <State extends DefaultState & { object: THREE.Object3D }>(
+		entity: Behavior<State>
+		// { create: () => LiveEntity<any> }
+	) => {
 		const liveEntity = entity.create();
 		console.warn(`[Scene]: Added entity. ${this.entities.length}`);
 
 		this.entities.push(liveEntity);
 		this.sceneThree.add(liveEntity.state.object);
-	}
+		return liveEntity;
+	};
 
 	setCamera(camera: THREE.PerspectiveCamera) {
 		this.activeCamera = camera;

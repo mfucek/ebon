@@ -118,8 +118,33 @@ const Cube = Entity.use(AgeTracker)
 	.use(Jumping)
 	.tick(({ keyboard, isJumping, age, object }) => {
 		if (keyboard.jump && !isJumping) {
+			a.actions.tint();
 			return { isJumping: true, jumpStart: age };
 		}
+	});
+
+const Dummy = Entity.use(AgeTracker)
+	.init(() => {
+		// create cube
+		const cube: THREE.Mesh<any, any> = new THREE.Mesh(
+			new RoundedBoxGeometry(1, 1, 1, 6, 0.2).translate(0, 0, 0.5),
+			new THREE.MeshStandardMaterial({ color: '#ff8f87', roughness: 0.2 })
+		);
+		cube.castShadow = true;
+		cube.receiveShadow = false;
+		cube.position.x = 2;
+
+		return { object: cube };
+	})
+	.action('tint', ({ object }) => {
+		console.log('tint');
+		const randomColor = Math.floor(Math.random() * 16777215)
+			.toString(16)
+			.padStart(6, '0');
+		object.material.color.set('#' + randomColor);
+	})
+	.tick(({ age, object }) => {
+		object.rotation.z = age / 1000;
 	});
 
 // Floor
@@ -140,6 +165,7 @@ const scene = new Scene();
 
 scene.addEntity(Cube);
 scene.addEntity(Floor);
+const a = scene.addEntity(Dummy);
 
 nukleus.setScene(scene);
 

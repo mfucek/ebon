@@ -1,29 +1,30 @@
 import { nanoid } from 'nanoid';
+import { Behavior, DefaultState } from '../behavior/Behavior';
 
 type FinalInitCallback<State> = (initialState?: Partial<State>) => State;
 type FinalTickCallback<State> = (state: State) => Partial<State>;
 
-export class LiveEntity<State extends {}> {
+export class LiveEntity<State extends DefaultState> {
 	state: State;
-	id: string;
+	_id = nanoid();
+	actions: Record<string, () => void> = {};
 
 	private tickCallback: FinalTickCallback<State>;
 
-	constructor(
-		behaveiour: {
-			init: FinalInitCallback<State>;
-			tick: FinalTickCallback<State>;
-		},
-		initialState?: Partial<State>
-	) {
-		this.tickCallback = behaveiour.tick;
+	constructor(behavior: Behavior<State>, initialState?: Partial<State>) {
+		this.tickCallback = behavior._tickCb;
 
 		// Execute initialization
-		const state = behaveiour.init({ ...initialState });
-
+		const state = behavior._initCb(initialState);
 		this.state = state;
 
-		this.id = nanoid();
+		// Generate action methods
+		for (const action in behavior.actions) {
+			this.actions[action] = () => {
+				const returnedState = behavior.actions[action](this.state);
+				this.state = { ...this.state, ...returnedState };
+			};
+		}
 	}
 
 	executeTick = (delta: number) => {
