@@ -2,8 +2,12 @@ import * as THREE from 'three';
 import { Behavior, DefaultState } from '../behavior/Behavior';
 import { LiveEntity } from '../entity/LiveEntity';
 
+type RequiredState = DefaultState & {
+	object: THREE.Object3D;
+};
+
 export class Scene {
-	entities: LiveEntity<any>[] = [];
+	entities: LiveEntity<any, any>[] = [];
 
 	sceneThree: THREE.Scene;
 	rendererThree: THREE.WebGLRenderer;
@@ -49,8 +53,8 @@ export class Scene {
 		this.sceneThree.add(light2);
 	}
 
-	addEntity = <State extends DefaultState & { object: THREE.Object3D }>(
-		entity: Behavior<State>
+	addEntity = <State extends RequiredState, Actions extends {}>(
+		entity: Behavior<State, Actions>
 		// { create: () => LiveEntity<any> }
 	) => {
 		const liveEntity = entity.create();

@@ -9,4 +9,12 @@ const initializeThreeObject = new Behavior().init(() => {
 	return { object: cube };
 });
 
-export const Entity = new Behavior().use(initializeThreeObject);
+const AgeTracker = new Behavior()
+	.init(() => {
+		return { age: 0 };
+	})
+	.tick(({ age, delta }) => {
+		return { age: age + delta };
+	});
+
+export const Entity = new Behavior().use(initializeThreeObject).use(AgeTracker);

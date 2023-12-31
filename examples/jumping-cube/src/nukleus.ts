@@ -6,20 +6,14 @@ console.clear();
 
 const nukleus = new Nukleus();
 
-// Age
-const AgeTracker = new Behavior()
-	.init(() => {
-		return { age: 0 };
-	})
-	.tick(({ age, delta }) => {
-		return { age: age + delta };
-	});
-
-const Jumping = new Behavior<{
-	age: number;
-	delta: number;
-	object: THREE.Object3D;
-}>()
+const Jumping = new Behavior<
+	{
+		age: number;
+		delta: number;
+		object: THREE.Object3D;
+	},
+	{}
+>()
 	.init(() => {
 		return {
 			jumpDuration: 1000,
@@ -62,7 +56,10 @@ const clamp = (value: number, min: number, max: number) => {
 	return Math.min(Math.max(value, min), max);
 };
 
-const SmoothMovement = new Behavior<{ object: THREE.Object3D; delta: number }>()
+const SmoothMovement = new Behavior<
+	{ object: THREE.Object3D; delta: number },
+	{}
+>()
 	.init(() => {
 		return {
 			speedX: 0,
@@ -82,7 +79,7 @@ const SmoothMovement = new Behavior<{ object: THREE.Object3D; delta: number }>()
 		return { speedX: newSpeedX, speedY: newSpeedY };
 	});
 
-const Movement = new Behavior<{ object: THREE.Object3D; delta: number }>()
+const Movement = new Behavior<{ object: THREE.Object3D; delta: number }, {}>()
 	.use(
 		new Keyboard(nukleus, {
 			up: 'w',
@@ -101,47 +98,53 @@ const Movement = new Behavior<{ object: THREE.Object3D; delta: number }>()
 		return { speedX, speedY };
 	});
 
-// Entity
-const Cube = Entity.use(AgeTracker)
-	.init(() => {
-		// create cube
-		const cube: THREE.Mesh<any, any> = new THREE.Mesh(
-			new RoundedBoxGeometry(1, 1, 1, 6, 0.2).translate(0, 0, 0.5),
-			new THREE.MeshStandardMaterial({ color: '#ff8f87', roughness: 0.2 })
-		);
-		cube.castShadow = true;
-		cube.receiveShadow = false;
+// Player
+const Player = Entity.init(() => {
+	// create cube
+	const cube: THREE.Mesh<any, any> = new THREE.Mesh(
+		new RoundedBoxGeometry(1, 1, 1, 6, 0.2).translate(0, 0, 0.5),
+		new THREE.MeshStandardMaterial({ color: '#ff8f87', roughness: 0.2 })
+	);
+	cube.castShadow = true;
+	cube.receiveShadow = false;
 
-		return { object: cube };
-	})
+	return { object: cube };
+})
 	.use(Movement)
 	.use(Jumping)
 	.tick(({ keyboard, isJumping, age, object }) => {
 		if (keyboard.jump && !isJumping) {
-			a.actions.tint();
+			console.log('[Player]: I told the dummy to change color');
+			const newColor = dummyRef.actions.tint();
+			console.log('[Player]: I dummy said new color is: ' + newColor + '\n\n');
+
 			return { isJumping: true, jumpStart: age };
 		}
 	});
 
-const Dummy = Entity.use(AgeTracker)
-	.init(() => {
-		// create cube
-		const cube: THREE.Mesh<any, any> = new THREE.Mesh(
-			new RoundedBoxGeometry(1, 1, 1, 6, 0.2).translate(0, 0, 0.5),
-			new THREE.MeshStandardMaterial({ color: '#ff8f87', roughness: 0.2 })
-		);
-		cube.castShadow = true;
-		cube.receiveShadow = false;
-		cube.position.x = 2;
+// Dummy
+const Dummy = Entity.init(() => {
+	// create cube
+	const cube: THREE.Mesh<any, any> = new THREE.Mesh(
+		new RoundedBoxGeometry(1, 1, 1, 6, 0.2).translate(0, 0, 0.5),
+		new THREE.MeshStandardMaterial({ color: '#ff8f87', roughness: 0.2 })
+	);
+	cube.castShadow = true;
+	cube.receiveShadow = false;
+	cube.position.x = 2;
 
-		return { object: cube };
-	})
-	.action('tint', ({ object }) => {
-		console.log('tint');
-		const randomColor = Math.floor(Math.random() * 16777215)
-			.toString(16)
-			.padStart(6, '0');
-		object.material.color.set('#' + randomColor);
+	return { object: cube };
+})
+	.action({
+		tint: (state) => {
+			console.log('[Dummy]: Tinting...');
+			const randomColor = Math.floor(Math.random() * 16777215)
+				.toString(16)
+				.padStart(6, '0');
+			state.object.material.color.set('#' + randomColor);
+
+			return { state, output: '#' + randomColor };
+		}
 	})
 	.tick(({ age, object }) => {
 		object.rotation.z = age / 1000;
@@ -163,9 +166,9 @@ const Floor = Entity.init(({ object }) => {
 // Scene
 const scene = new Scene();
 
-scene.addEntity(Cube);
+scene.addEntity(Player);
 scene.addEntity(Floor);
-const a = scene.addEntity(Dummy);
+const dummyRef = scene.addEntity(Dummy);
 
 nukleus.setScene(scene);
 

@@ -7,21 +7,24 @@ import {
 	InitCallback,
 	TickCallback
 } from '../entity/types/Callback';
+import { ActionDict } from '../entity/types/action-helpers';
 
 export type DefaultState = {
 	delta: number;
 };
 
-export class Behavior<State extends DefaultState> {
+export class Behavior<State extends DefaultState, Actions extends {}> {
 	_initCb: FinalInitCallback<State>;
 	_tickCb: FinalTickCallback<State>;
+
+	_rawActions: Actions = {} as Actions;
 
 	_id = nanoid();
 
 	constructor(previousProps?: {
 		prevInit: FinalInitCallback<State>;
 		prevTick: FinalTickCallback<State>;
-		prevActions: Record<string, TickCallback<State>>;
+		prevActions: Actions;
 	}) {
 		// blank entity
 		if (!previousProps) {
@@ -33,15 +36,14 @@ export class Behavior<State extends DefaultState> {
 			};
 			this._initCb = blankInit;
 			this._tickCb = blankTick;
-			this.actions = {};
-
+			this._rawActions = {} as Actions;
 			return this;
 		}
 
 		// recursive call
 		this._initCb = previousProps.prevInit;
 		this._tickCb = previousProps.prevTick;
-		this.actions = previousProps.prevActions;
+		this._rawActions = previousProps.prevActions;
 	}
 
 	/**
@@ -65,13 +67,10 @@ export class Behavior<State extends DefaultState> {
 			return finalState;
 		};
 
-		return new Behavior<State & NewState>({
+		return new Behavior<State & NewState, Actions>({
 			prevInit: newInit,
 			prevTick: newTick,
-			prevActions: this.actions as Record<
-				string,
-				TickCallback<State & NewState>
-			>
+			prevActions: this._rawActions
 		});
 	};
 
@@ -87,10 +86,10 @@ export class Behavior<State extends DefaultState> {
 			const finalState = { ...oldState, ...state, ...newState };
 			return finalState;
 		};
-		return new Behavior<State>({
+		return new Behavior<State, Actions>({
 			prevInit: this._initCb,
 			prevTick: newTick,
-			prevActions: this.actions
+			prevActions: this._rawActions
 		});
 	};
 
@@ -99,7 +98,9 @@ export class Behavior<State extends DefaultState> {
 	 * Use lets you use another entity's init and tick functions.
 	 * @template ent - The entity to be used.
 	 */
-	use = <NewState extends DefaultState>(ent: Behavior<NewState>) => {
+	use = <NewState extends DefaultState, NewActions extends ActionDict<State>>(
+		ent: Behavior<NewState, NewActions>
+	) => {
 		const newInit = (initialState?: Partial<State & NewState>) => {
 			const oldState = this._initCb(initialState);
 			const newState = ent._initCb(oldState as unknown as NewState);
@@ -116,26 +117,28 @@ export class Behavior<State extends DefaultState> {
 			return finalState;
 		};
 
-		return new Behavior<State & NewState>({
+		type ActionsType = Omit<Actions, keyof NewActions> & NewActions;
+
+		return new Behavior<State & NewState, ActionsType>({
 			prevInit: newInit,
 			prevTick: newTick,
-			prevActions: { ...this.actions, ...ent.actions } as Record<
-				string,
-				TickCallback<State & NewState>
-			>
+			prevActions: { ...this._rawActions, ...ent._rawActions }
 		});
 	};
 
-	actions: Record<string, TickCallback<State>> = {};
+	// /**
+	//  * Action lets you define a function that can be called from outside the entity.
+	//  * @template name - The name of the action.
+	//  * @template actionCb - The function to be called when the action is executed.
+	//  */
+	action = <NewActions extends ActionDict<State>>(rawActions: NewActions) => {
+		type ActionsType = Omit<Actions, keyof NewActions> & NewActions;
 
-	/**
-	 * Action lets you define a function that can be called from outside the entity.
-	 * @template name - The name of the action.
-	 * @template actionCb - The function to be called when the action is executed.
-	 */
-	action = (name: string, actionCb: TickCallback<State>) => {
-		this.actions[name] = actionCb;
-		return this;
+		return new Behavior<State, ActionsType>({
+			prevInit: this._initCb,
+			prevTick: this._tickCb,
+			prevActions: { ...this._rawActions, ...rawActions } as ActionsType
+		});
 	};
 
 	create = (initialState?: Partial<State>) => {
