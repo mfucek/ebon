@@ -1,7 +1,7 @@
 import { Camera, Vector3 } from 'three';
 import { create } from 'zustand';
 
-const createVector = (p: Vector3, camera: THREE.Camera) => {
+const projectWorldToScreen = (p: Vector3, camera: THREE.Camera) => {
 	var vector = p.clone().project(camera);
 
 	vector.x = (vector.x + 1) / 2;
@@ -11,9 +11,6 @@ const createVector = (p: Vector3, camera: THREE.Camera) => {
 };
 
 type CounterStore = {
-	position: Vector3;
-	position2: Vector3 | null;
-	set: (position: Vector3) => void;
 	camera: Camera | null;
 	setCamera: (camera: Camera) => void;
 	objects: {
@@ -28,16 +25,7 @@ type CounterStore = {
 	updateObject: (id: string, object: THREE.Object3D) => void;
 };
 // using the create with generics
-export const useCounterStore = create<CounterStore>((set) => ({
-	position: new Vector3(),
-	position2: null,
-	set: (position) => {
-		return set((state) => ({
-			...state,
-			position,
-			position2: state.camera ? createVector(position, state.camera) : null
-		}));
-	},
+export const useNukleusInterface = create<CounterStore>((set) => ({
 	camera: null,
 	setCamera: (camera) => {
 		return set((state) => ({ ...state, camera }));
@@ -51,7 +39,7 @@ export const useCounterStore = create<CounterStore>((set) => ({
 				[id]: {
 					object,
 					position: state.camera
-						? createVector(object.position, state.camera)
+						? projectWorldToScreen(object.position, state.camera)
 						: undefined
 				}
 			}
@@ -72,7 +60,7 @@ export const useCounterStore = create<CounterStore>((set) => ({
 					...state.objects[id],
 					object,
 					position: state.camera
-						? createVector(object.position, state.camera)
+						? projectWorldToScreen(object.position, state.camera)
 						: undefined
 				}
 			}

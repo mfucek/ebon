@@ -6,7 +6,9 @@ function App() {
 		<main className="App">
 			<NukleusContainer
 				script={game}
-				style={{ background: 'linear-gradient(-45deg, #131313, #3a3a3a)' }}
+				style={{
+					background: 'linear-gradient(-45deg, #131313, #3a3a3a)'
+				}}
 			>
 				{'Hello!'}
 			</NukleusContainer>

@@ -16,7 +16,8 @@
 		"build": "tsup --minify && npm link",
 		"test": "jest",
 		"publish": "npm publish",
-		"relink": "echo"
+		"relink": "echo",
+		"remoteyarn": "echo"
 	},
 	"dependencies": {
 		"nanoid": "^5.0.3",
