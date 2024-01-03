@@ -1,4 +1,12 @@
-import { Behavior, Entity, Keyboard, Nukleus, Scene } from '@nukleus/core';
+import {
+	Behavior,
+	Entity,
+	Keyboard,
+	Nukleus,
+	Scene,
+	useCounterStore
+} from '@nukleus/core';
+import { FC } from 'react';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 
@@ -98,6 +106,23 @@ const Movement = new Behavior<{ object: THREE.Object3D; delta: number }, {}>()
 		return { speedX, speedY };
 	});
 
+const Tooltip: FC<{ text: string }> = ({ text }) => (
+	<div
+		style={{
+			background: '#44444480',
+			color: 'white',
+			borderRadius: '8px',
+			padding: '8px 12px',
+			fontSize: '12px',
+			fontWeight: 'bold',
+			transform: 'translate(-50%, -100%)',
+			backdropFilter: 'blur(4px)'
+		}}
+	>
+		{text}
+	</div>
+);
+
 // Player
 const Player = Entity.init(() => {
 	// create cube
@@ -112,6 +137,21 @@ const Player = Entity.init(() => {
 })
 	.use(Movement)
 	.use(Jumping)
+	.init(({ object }) => {
+		const interfaceId = Math.random().toString(36).substr(2, 9);
+		const offsetObject = object.clone();
+		offsetObject.position.z += 1.5;
+		useCounterStore.getState().registerObject(interfaceId, offsetObject);
+		useCounterStore
+			.getState()
+			.setElement(interfaceId, <Tooltip text="Player" />);
+		return { interfaceId };
+	})
+	.tick(({ interfaceId, object }) => {
+		const offsetObject = object.clone();
+		offsetObject.position.z += 1.5;
+		useCounterStore.getState().updateObject(interfaceId, offsetObject);
+	})
 	.tick(({ keyboard, isJumping, age, object }) => {
 		if (keyboard.jump && !isJumping) {
 			console.log('[Player]: I told the dummy to change color');
@@ -135,6 +175,22 @@ const Dummy = Entity.init(() => {
 
 	return { object: cube };
 })
+
+	.init(({ object }) => {
+		const interfaceId = Math.random().toString(36).substr(2, 9);
+		const offsetObject = object.clone();
+		offsetObject.position.z += 1.5;
+		useCounterStore.getState().registerObject(interfaceId, offsetObject);
+		useCounterStore
+			.getState()
+			.setElement(interfaceId, <Tooltip text="Dummy" />);
+		return { interfaceId };
+	})
+	.tick(({ interfaceId, object }) => {
+		const offsetObject = object.clone();
+		offsetObject.position.z += 1.5;
+		useCounterStore.getState().updateObject(interfaceId, offsetObject);
+	})
 	.action({
 		tint: (state) => {
 			console.log('[Dummy]: Tinting...');

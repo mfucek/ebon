@@ -5,4 +5,5 @@ import { Keyboard } from './modules/keyboard/KeyboardManager';
 import { Nukleus, NukleusContainer } from './modules/nukleus/Nukleus';
 import { Scene } from './modules/scene/Scene';
 
+export { useCounterStore } from './lib/zustand';
 export { Behavior, Camera, Entity, Keyboard, Nukleus, NukleusContainer, Scene };
