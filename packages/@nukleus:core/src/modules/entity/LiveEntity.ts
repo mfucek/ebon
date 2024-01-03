@@ -53,4 +53,11 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 		// 	this.state[key] = returnedState[key];
 		// }
 	};
+
+	is = (behavior: Behavior<any, any>) => {
+		return this.behavior._id === behavior._id;
+	};
+	has = (behavior: Behavior<any, any>) => {
+		return this.behavior._used_ids.includes(behavior._id);
+	};
 }

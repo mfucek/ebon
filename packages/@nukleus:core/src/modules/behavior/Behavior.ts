@@ -20,11 +20,13 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 	_rawActions: Actions = {} as Actions;
 
 	_id = nanoid();
+	_used_ids: string[] = [];
 
 	constructor(previousProps?: {
 		prevInit: FinalInitCallback<State>;
 		prevTick: FinalTickCallback<State>;
 		prevActions: Actions;
+		prevUsedIds: string[];
 	}) {
 		// blank entity
 		if (!previousProps) {
@@ -37,6 +39,7 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 			this._initCb = blankInit;
 			this._tickCb = blankTick;
 			this._rawActions = {} as Actions;
+			this._used_ids = [];
 			return this;
 		}
 
@@ -44,6 +47,7 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 		this._initCb = previousProps.prevInit;
 		this._tickCb = previousProps.prevTick;
 		this._rawActions = previousProps.prevActions;
+		this._used_ids = previousProps.prevUsedIds;
 	}
 
 	/**
@@ -70,7 +74,8 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 		return new Behavior<State & NewState, Actions>({
 			prevInit: newInit,
 			prevTick: newTick,
-			prevActions: this._rawActions
+			prevActions: this._rawActions,
+			prevUsedIds: this._used_ids
 		});
 	};
 
@@ -89,7 +94,8 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 		return new Behavior<State, Actions>({
 			prevInit: this._initCb,
 			prevTick: newTick,
-			prevActions: this._rawActions
+			prevActions: this._rawActions,
+			prevUsedIds: this._used_ids
 		});
 	};
 
@@ -122,7 +128,8 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 		return new Behavior<State & NewState, ActionsType>({
 			prevInit: newInit,
 			prevTick: newTick,
-			prevActions: { ...this._rawActions, ...ent._rawActions }
+			prevActions: { ...this._rawActions, ...ent._rawActions },
+			prevUsedIds: [...this._used_ids, ent._id]
 		});
 	};
 
@@ -132,12 +139,13 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 	//  * @template actionCb - The function to be called when the action is executed.
 	//  */
 	action = <NewActions extends ActionDict<State>>(rawActions: NewActions) => {
-		type ActionsType = Omit<Actions, keyof NewActions> & NewActions;
+		type MergedActionsType = Omit<Actions, keyof NewActions> & NewActions;
 
-		return new Behavior<State, ActionsType>({
+		return new Behavior<State, MergedActionsType>({
 			prevInit: this._initCb,
 			prevTick: this._tickCb,
-			prevActions: { ...this._rawActions, ...rawActions } as ActionsType
+			prevActions: { ...this._rawActions, ...rawActions },
+			prevUsedIds: this._used_ids
 		});
 	};
 
