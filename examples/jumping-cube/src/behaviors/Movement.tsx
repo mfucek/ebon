@@ -13,6 +13,7 @@ export const Movement = new Behavior<
 			down: 's',
 			left: 'a',
 			right: 'd',
+			interact: 'e',
 			jump: ' '
 		}).register()
 	)

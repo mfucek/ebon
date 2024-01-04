@@ -1,7 +1,7 @@
-import { Entity, InterfaceAnchored } from '@nukleus/core';
+import { Entity, InterfaceAnchored, useNukleusInterface } from '@nukleus/core';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
-import { Tooltip } from '../../ui/Tooltip';
+import { QuestMarker } from '../../ui/QuestMarker';
 
 export const Dummy = Entity.init(() => {
 	// Dummy
@@ -15,7 +15,11 @@ export const Dummy = Entity.init(() => {
 	cube.position.x = 2;
 	return { object: cube };
 })
-	.use(InterfaceAnchored(<Tooltip text="Dummy" />))
+	// .use(InterfaceAnchored(<Tooltip text="Dummy" />))
+	.use(InterfaceAnchored(<QuestMarker />))
+	.init(() => {
+		return { quest: { active: true } };
+	})
 	.action({
 		tint: (state) => {
 			console.log('[Dummy]: Tinting...');
@@ -25,6 +29,12 @@ export const Dummy = Entity.init(() => {
 			state.object.material.color.set('#' + randomColor);
 
 			return { state, output: '#' + randomColor };
+		},
+		tickQuest: (state) => {
+			useNukleusInterface
+				.getState()
+				.setElement(state.interfaceId, <QuestMarker disabled />);
+			return { state: { ...state, quest: { active: false } } };
 		}
 	})
 	.tick(({ age, object }) => {

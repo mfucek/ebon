@@ -16,9 +16,11 @@ export const InterfaceHandler: FC<PropsWithChildren> = ({ children }) => {
 					key={key}
 					style={{
 						position: 'absolute',
-						top: (obj.position?.y || 0) * 100 + '%',
+						// top: (obj.position?.y || 0) * 100 + '%',
+						bottom: 100 - (obj.position?.y || 0) * 100 + '%',
 						left: (obj.position?.x || 0) * 100 + '%',
-						zIndex: -Math.floor(100000 * (obj.position?.z || 0))
+						zIndex: -Math.floor(100000 * (obj.position?.z || 0)),
+						transform: 'translate(-50%, 0)'
 					}}
 				>
 					{obj.element}

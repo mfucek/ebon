@@ -22,6 +22,9 @@ export const Player = Entity.init(() => {
 	.use(Jumping)
 	.use(InterfaceAnchored(<Tooltip text="Player" />))
 	.tick(({ keyboard, isJumping, age, object }) => {
+		if (keyboard.interact) {
+			dummyRef.actions.tickQuest();
+		}
 		if (keyboard.jump && !isJumping) {
 			console.log('[Player]: I told the dummy to change color');
 			const newColor = dummyRef.actions.tint();
