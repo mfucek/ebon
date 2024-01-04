@@ -65,10 +65,9 @@ class Nukleus {
 
 		canvas.style.width = '100%';
 		canvas.style.height = '100%';
-		canvas.tabIndex = 1;
 
-		canvas.addEventListener('keydown', keyboardCallbacks.onKeyDown);
-		canvas.addEventListener('keyup', keyboardCallbacks.onKeyUp);
+		document.addEventListener('keydown', keyboardCallbacks.onKeyDown);
+		document.addEventListener('keyup', keyboardCallbacks.onKeyUp);
 
 		this.container.appendChild(canvas);
 		canvas.focus();
