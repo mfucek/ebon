@@ -1,4 +1,4 @@
-import { KeyboardController } from '../keyboard/KeyboardManager';
+import { KeyboardController } from '../keyboard/controller';
 import { Scene } from '../scene/Scene';
 import { NukleusContainer } from './container';
 

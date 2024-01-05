@@ -5,8 +5,8 @@ import React, {
 	useEffect,
 	useRef
 } from 'react';
-import { InterfaceHandler } from '../../interface/InterfaceHandler';
-import { Nukleus } from '../Nukleus';
+import { InterfaceRenderer } from '../interface/renderer';
+import { Nukleus } from './Nukleus';
 
 interface NukleusContainerProps {
 	script?: Nukleus;
@@ -47,7 +47,7 @@ export const NukleusContainer: FC<
 
 	return (
 		<>
-			<InterfaceHandler>{children}</InterfaceHandler>
+			<InterfaceRenderer>{children}</InterfaceRenderer>
 			<div
 				id="nukleus-container"
 				style={{ ...styles, ...style }}

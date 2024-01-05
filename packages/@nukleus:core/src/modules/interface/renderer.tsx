@@ -5,7 +5,7 @@ const dictToTuple = <V,>(dict: { [key: string]: V }): [string, V][] => {
 	return Object.keys(dict).map((key) => [key, dict[key]]);
 };
 
-export const InterfaceHandler: FC<PropsWithChildren> = ({ children }) => {
+export const InterfaceRenderer: FC<PropsWithChildren> = ({ children }) => {
 	const counter = useNukleusInterface();
 
 	return (
@@ -21,6 +21,7 @@ export const InterfaceHandler: FC<PropsWithChildren> = ({ children }) => {
 						left: (obj.position?.x || 0) * 100 + '%',
 						zIndex: -Math.floor(100000 * (obj.position?.z || 0)),
 						transform: 'translate(-50%, 0)'
+						// filter: `blur(${1 / (1 - (obj.position?.z || 0) ** 50) - 1}px)`
 					}}
 				>
 					{obj.element}

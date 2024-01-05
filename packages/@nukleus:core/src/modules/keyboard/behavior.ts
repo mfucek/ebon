@@ -1,21 +1,6 @@
 import { Behavior } from '../behavior/Behavior';
 import { Nukleus } from '../nukleus/Nukleus';
 
-export class KeyboardController {
-	keys: Record<string, boolean> = {};
-
-	getKeyboardCallbacks = (): Record<string, (ev: KeyboardEvent) => void> => {
-		return {
-			onKeyDown: (ev) => {
-				this.keys[ev.key] = true;
-			},
-			onKeyUp: (ev) => {
-				this.keys[ev.key] = false;
-			}
-		};
-	};
-}
-
 export class Keyboard<Bind extends string> {
 	bindKey: Record<Bind, string>;
 	bindState: Record<Bind, boolean>;

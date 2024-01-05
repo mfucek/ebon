@@ -1,4 +1,4 @@
-export class MouseManager {
+export class MouseController {
 	constructor() {
 		console.log('MouseManager');
 	}
