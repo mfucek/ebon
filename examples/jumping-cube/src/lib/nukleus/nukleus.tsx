@@ -1,3 +1,3 @@
-import { Nukleus } from '@nukleus/core';
+import { Nukleus } from 'nukleus';
 
 export const nukleus = new Nukleus();

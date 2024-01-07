@@ -1,4 +1,4 @@
-import { Entity, InterfaceAnchored, useNukleusInterface } from '@nukleus/core';
+import { Entity, InterfaceAnchored, useNukleusInterface } from 'nukleus';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 import { QuestMarker } from '../../ui/QuestMarker';

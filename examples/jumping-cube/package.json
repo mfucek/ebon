@@ -11,7 +11,7 @@
 	},
 	"scripts": {
 		"dev": "BROWSER=none react-scripts start",
-		"relink": "yarn link @nukleus/core",
+		"relink": "yarn link nukleus",
 		"postinstall": "yarn relink"
 	},
 	"eslintConfig": {

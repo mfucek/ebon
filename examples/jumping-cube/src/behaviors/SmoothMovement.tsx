@@ -1,4 +1,4 @@
-import { Behavior } from '@nukleus/core';
+import { Behavior } from 'nukleus';
 import * as THREE from 'three';
 import { clamp } from '../utils/clamp';
 

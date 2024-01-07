@@ -1,4 +1,4 @@
-import { Entity, Scene } from '@nukleus/core';
+import { Entity, Scene } from 'nukleus';
 import * as THREE from 'three';
 import { Dummy } from './entities/Dummy';
 import { Player } from './entities/Player';
@@ -24,6 +24,7 @@ const scene = new Scene();
 
 scene.addEntity(Player);
 scene.addEntity(Floor);
+// scene.addEntity(Duje);
 export const dummyRef = scene.addEntity(Dummy);
 
 nukleus.setScene(scene);

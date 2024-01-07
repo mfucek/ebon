@@ -1,4 +1,4 @@
-import { Entity, InterfaceAnchored } from '@nukleus/core';
+import { Entity, InterfaceAnchored } from 'nukleus';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 import { Jumping } from '../../Jumping';
@@ -31,5 +31,27 @@ export const Player = Entity.init(() => {
 			console.log('[Player]: I dummy said new color is: ' + newColor + '\n\n');
 
 			return { isJumping: true, jumpStart: age };
+		}
+	});
+
+export const Duje = Entity.init(() => {
+	return { b: 5 };
+})
+	.init(() => {
+		return {
+			object: new THREE.Mesh(
+				new THREE.BoxGeometry(1, 1, 1),
+				new THREE.MeshBasicMaterial({ color: 'red' })
+			)
+		};
+	})
+	.tick(({ age, object }) => {
+		object.position.z = Math.sin(age / 1000) * 2;
+	})
+	.action({
+		foo: (state) => {
+			console.log('foo');
+			state.object.material.color.set('#00ff00');
+			return { state };
 		}
 	});

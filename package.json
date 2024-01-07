@@ -5,11 +5,11 @@
 	"private": "true",
 	"main": "index.js",
 	"scripts": {
-		"dev": "yarn workspace @nukleus/core dev"
+		"dev": "yarn workspace core dev"
 	},
 	"license": "MIT",
 	"workspaces": [
 		"examples/*",
-		"packages/@nukleus:core"
+		"packages/core"
 	]
 }

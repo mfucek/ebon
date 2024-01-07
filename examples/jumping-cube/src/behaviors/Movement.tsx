@@ -1,4 +1,4 @@
-import { Behavior, Keyboard } from '@nukleus/core';
+import { Behavior, Keyboard } from 'nukleus';
 import * as THREE from 'three';
 import { nukleus } from '../lib/nukleus/nukleus';
 import { SmoothMovement } from './SmoothMovement';
