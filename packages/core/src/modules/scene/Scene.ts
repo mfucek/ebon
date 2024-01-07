@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { useNukleusInterface } from '../../lib/zustand';
+import { useEbonInterface } from '../../lib/zustand';
 import { Behavior, DefaultState } from '../behavior/Behavior';
 import { LiveEntity } from '../entity/LiveEntity';
 
@@ -34,7 +34,7 @@ export class Scene {
 		this.activeCamera.position.set(-2, 5, 3).multiplyScalar(2);
 		this.activeCamera.lookAt(0, 0, 0);
 		this.sceneThree.add(this.activeCamera);
-		useNukleusInterface.getState().setCamera(this.activeCamera);
+		useEbonInterface.getState().setCamera(this.activeCamera);
 
 		const light = new THREE.DirectionalLight(0xffffff, 1);
 		light.position.set(-2, 1, 2); //default; light shining from top

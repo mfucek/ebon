@@ -1,12 +1,12 @@
 import { FC, PropsWithChildren } from 'react';
-import { useNukleusInterface } from '../../lib/zustand';
+import { useEbonInterface } from '../../lib/zustand';
 
 const dictToTuple = <V,>(dict: { [key: string]: V }): [string, V][] => {
 	return Object.keys(dict).map((key) => [key, dict[key]]);
 };
 
 export const InterfaceRenderer: FC<PropsWithChildren> = ({ children }) => {
-	const counter = useNukleusInterface();
+	const counter = useEbonInterface();
 
 	return (
 		<div style={{ position: 'absolute', inset: '0', zIndex: 0 }}>

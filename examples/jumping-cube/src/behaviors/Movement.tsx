@@ -1,6 +1,6 @@
 import { Behavior, Keyboard } from 'ebon';
 import * as THREE from 'three';
-import { nukleus } from '../lib/nukleus/nukleus';
+import { ebon } from '../lib/ebon/ebon';
 import { SmoothMovement } from './SmoothMovement';
 
 export const Movement = new Behavior<
@@ -8,7 +8,7 @@ export const Movement = new Behavior<
 	{}
 >()
 	.use(
-		new Keyboard(nukleus, {
+		new Keyboard(ebon, {
 			up: 'w',
 			down: 's',
 			left: 'a',

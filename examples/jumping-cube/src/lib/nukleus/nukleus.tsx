@@ -1,3 +1,3 @@
-import { Nukleus } from 'ebon';
+import { Ebon } from 'ebon';
 
-export const nukleus = new Nukleus();
+export const ebon = new Ebon();

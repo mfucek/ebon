@@ -25,7 +25,7 @@ type CounterStore = {
 	updateObject: (id: string, object: THREE.Object3D) => void;
 };
 // using the create with generics
-export const useNukleusInterface = create<CounterStore>((set) => ({
+export const useEbonInterface = create<CounterStore>((set) => ({
 	camera: null,
 	setCamera: (camera) => {
 		return set((state) => ({ ...state, camera }));

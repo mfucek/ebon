@@ -6,21 +6,21 @@ import React, {
 	useRef
 } from 'react';
 import { InterfaceRenderer } from '../interface/renderer';
-import { Nukleus } from './Nukleus';
+import { Ebon } from './Ebon';
 
-interface NukleusContainerProps {
-	script?: Nukleus;
+interface EbonContainerProps {
+	script?: Ebon;
 }
 
-export const NukleusContainer: FC<
-	HTMLAttributes<HTMLDivElement> & NukleusContainerProps & PropsWithChildren
-> = ({ script: nukleus, style, children, ...rest }) => {
+export const EbonContainer: FC<
+	HTMLAttributes<HTMLDivElement> & EbonContainerProps & PropsWithChildren
+> = ({ script: ebon, style, children, ...rest }) => {
 	const canvasContainerRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		if (!nukleus) {
+		if (!ebon) {
 			console.error(
-				'No script provided. Please provide a script in NukleusContainer to initialize.'
+				'No script provided. Please provide a script in EbonContainer to initialize.'
 			);
 			return;
 		}
@@ -29,9 +29,9 @@ export const NukleusContainer: FC<
 			return;
 		}
 
-		const cleanup = nukleus.initialize(canvasContainerRef.current!);
+		const cleanup = ebon.initialize(canvasContainerRef.current!);
 		console.log('Container initialized');
-		nukleus.start();
+		ebon.start();
 		console.log('Script started');
 
 		return () => {
@@ -49,7 +49,7 @@ export const NukleusContainer: FC<
 		<>
 			<InterfaceRenderer>{children}</InterfaceRenderer>
 			<div
-				id="nukleus-container"
+				id="ebon-container"
 				style={{ ...styles, ...style }}
 				ref={canvasContainerRef}
 				{...rest}
