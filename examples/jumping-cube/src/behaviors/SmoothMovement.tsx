@@ -1,4 +1,4 @@
-import { Behavior } from 'nukleus';
+import { Behavior } from 'ebon';
 import * as THREE from 'three';
 import { clamp } from '../utils/clamp';
 

@@ -1,4 +1,4 @@
-import { Behavior } from 'nukleus';
+import { Behavior } from 'ebon';
 import * as THREE from 'three';
 
 export const Jumping = new Behavior<

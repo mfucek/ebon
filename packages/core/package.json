@@ -1,16 +1,30 @@
 {
-	"name": "nukleus",
-	"version": "0.0.0",
-	"description": "An entity management library built on top of three.js and react.",
+	"name": "ebon",
+	"version": "0.16.0",
+	"description": "An ECS framework for building games & 3d visualizations built on top of three and react.",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.ts",
-	"private": "true",
 	"files": [
 		"dist"
 	],
 	"author": "Matija Fucek <contact@mfucek.com> (https://www.mfucek.com)",
 	"license": "MIT",
+	"homepage": "https://github.com/mfucek/nukleus",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mfucek/nukleus.git"
+	},
+	"keywords": [
+		"ecs",
+		"three",
+		"react",
+		"game",
+		"engine",
+		"framework",
+		"3d",
+		"visualization"
+	],
 	"scripts": {
 		"dev": "tsup --watch --onSuccess \"npm link && yarn workspaces run relink\"",
 		"build": "tsup --minify && npm link",

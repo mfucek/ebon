@@ -1,4 +1,4 @@
-import { Entity, InterfaceAnchored } from 'nukleus';
+import { Entity, InterfaceAnchored } from 'ebon';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 import { Jumping } from '../../Jumping';

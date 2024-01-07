@@ -1,4 +1,4 @@
-import { NukleusContainer } from 'nukleus';
+import { NukleusContainer } from 'ebon';
 import { game } from './nukleus';
 
 function App() {

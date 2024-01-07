@@ -1,7 +1,7 @@
 {
-	"name": "nukleus-workspace",
+	"name": "ebon-workspace",
 	"version": "1.0.0",
-	"description": "Nukleus Workspace",
+	"description": "Ebon Workspace",
 	"private": "true",
 	"main": "index.js",
 	"scripts": {

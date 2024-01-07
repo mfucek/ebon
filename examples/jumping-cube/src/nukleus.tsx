@@ -1,4 +1,4 @@
-import { Entity, Scene } from 'nukleus';
+import { Entity, Scene } from 'ebon';
 import * as THREE from 'three';
 import { Dummy } from './entities/Dummy';
 import { Player } from './entities/Player';
