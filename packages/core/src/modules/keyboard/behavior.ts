@@ -1,21 +1,21 @@
 import { Behavior } from '../behavior/Behavior';
-import { Nukleus } from '../nukleus/Nukleus';
+import { Ebon } from '../ebon';
 
 export class Keyboard<Bind extends string> {
 	bindKey: Record<Bind, string>;
 	bindState: Record<Bind, boolean>;
 
-	nukleus: Nukleus;
+	ebon: Ebon;
 
 	/**
 	 * @param bindKeys - Define which actions should be bound to which keys
 	 * @example { 'jump': 'Space', 'up': 'ArrowUp' }
 	 * @returns a Behavior that can be used in an entity
 	 */
-	constructor(nukleus: Nukleus, bindKey: Record<Bind, string>) {
+	constructor(ebon: Ebon, bindKey: Record<Bind, string>) {
 		console.log('KeyboardManager');
 
-		this.nukleus = nukleus;
+		this.ebon = ebon;
 		this.bindKey = bindKey;
 
 		this.bindState = {} as Record<Bind, boolean>;
@@ -27,7 +27,7 @@ export class Keyboard<Bind extends string> {
 	updateStates = () => {
 		for (const bind in this.bindKey) {
 			this.bindState[bind] =
-				this.nukleus.keyboardController.keys[this.bindKey[bind]];
+				this.ebon.keyboardController.keys[this.bindKey[bind]];
 		}
 	};
 

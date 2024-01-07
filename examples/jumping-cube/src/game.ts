@@ -2,7 +2,7 @@ import { Entity, Scene } from 'ebon';
 import * as THREE from 'three';
 import { Dummy } from './entities/Dummy';
 import { Player } from './entities/Player';
-import { nukleus } from './lib/nukleus/nukleus';
+import { ebon } from './lib/ebon/ebon';
 
 console.clear();
 
@@ -27,8 +27,8 @@ scene.addEntity(Floor);
 // scene.addEntity(Duje);
 export const dummyRef = scene.addEntity(Dummy);
 
-nukleus.setScene(scene);
+ebon.setScene(scene);
 
-const game = nukleus;
+const game = ebon;
 
 export { game };

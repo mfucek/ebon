@@ -4,7 +4,7 @@
 	"private": "true",
 	"scripts": {
 		"dev": "BROWSER=none react-scripts start",
-		"relink": "yarn link nukleus",
+		"relink": "echo",
 		"postinstall": "yarn relink"
 	},
 	"eslintConfig": {

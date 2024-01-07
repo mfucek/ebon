@@ -10,10 +10,10 @@
 	],
 	"author": "Matija Fucek <contact@mfucek.com> (https://www.mfucek.com)",
 	"license": "MIT",
-	"homepage": "https://github.com/mfucek/nukleus",
+	"homepage": "https://github.com/mfucek/ebon",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/mfucek/nukleus.git"
+		"url": "git+https://github.com/mfucek/ebon.git"
 	},
 	"keywords": [
 		"ecs",
@@ -26,12 +26,10 @@
 		"visualization"
 	],
 	"scripts": {
-		"dev": "tsup --watch --onSuccess \"npm link && yarn workspaces run relink\"",
+		"dev": "tsup --watch # --onSuccess \"npm link\"",
 		"build": "tsup --minify && npm link",
 		"test": "vitest --typecheck",
-		"publish": "npm publish",
-		"relink": "echo",
-		"remoteyarn": "echo"
+		"publish": "npm publish"
 	},
 	"dependencies": {
 		"nanoid": "^5.0.3",

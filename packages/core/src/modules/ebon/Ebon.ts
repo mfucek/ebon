@@ -1,12 +1,12 @@
 import { KeyboardController } from '../keyboard/controller';
 import { Scene } from '../scene/Scene';
-import { NukleusContainer } from './container';
+import { EbonContainer } from './container';
 
-class Nukleus {
+class Ebon {
 	activeScene: Scene | null = null;
 
 	constructor() {
-		console.log('Nukleus');
+		console.log('Ebon');
 	}
 
 	private lastTick = Date.now();
@@ -116,6 +116,4 @@ class Nukleus {
 	};
 }
 
-// class LiveNukleus {}
-
-export { Nukleus, NukleusContainer };
+export { Ebon, EbonContainer };
