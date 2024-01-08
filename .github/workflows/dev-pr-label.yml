@@ -11,9 +11,12 @@ jobs:
   check_labels:
     name: 'Check PR Labels'
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v3
-      - uses: mheap/github-action-required-labels@v1
+      - uses: mheap/github-action-required-labels@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
