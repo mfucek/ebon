@@ -1,4 +1,4 @@
-name: 'Dev - PR Close'
+name: 'PR Close - Dev'
 on:
   pull_request:
     branches:
@@ -48,7 +48,7 @@ jobs:
           git commit -m "Bump version to $(node -p "require('./package.json').version")"
       - name: Git push version bump
         run: git push origin develop --follow-tags --force
-      - id: set-version
+      - id: get-version
         name: Output version change
         run: |
           cd packages/core

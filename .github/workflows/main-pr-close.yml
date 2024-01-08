@@ -1,4 +1,4 @@
-name: 'Main - PR Close'
+name: 'PR Close - Main'
 on:
   pull_request:
     branches:
@@ -21,10 +21,15 @@ jobs:
         with:
           node-version: '20.x'
           cache: 'npm'
-      - id: get-version
-        name: Output package/core version
+      - name: Git config
         run: |
-          cd /packages/core
+          git config --global user.email "${{ secrets.GH_ORG_EMAIL }}"
+          git config --global user.name "${{ secrets.GH_ORG_NAME }}"
+      - id: get-version
+        name: Output core package version
+        run: |
+          ls -la
+          cd packages/core/
           npm pkg get version
       # if "release npm" label is present, create a release with tag equal to the version and the PR title as the release title
       - name: Create release
