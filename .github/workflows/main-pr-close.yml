@@ -29,8 +29,7 @@ jobs:
         name: Output core package version
         run: |
           cd packages/core/
-          # npm pkg get version
-          echo "::set-output name=version::$(npm pkg get version)"
+          echo "VERSION=$(npm pkg get version)" >> $GITHUB_ENV
       # if "release npm" label is present, create a release with tag equal to the version and the PR title as the release title
       - name: Create release
         if: contains(github.event.pull_request.labels.*.name, 'release npm')
@@ -38,6 +37,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_ORG_PAT }}
         with:
-          tag_name: ${{ steps.get-version.outputs.stdout }}
+          tag_name: ${{ env.VERSION }}
           release_name: ${{ github.event.pull_request.title }}
           body: ${{ github.event.pull_request.body }}
