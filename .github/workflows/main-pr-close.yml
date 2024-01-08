@@ -1,0 +1,31 @@
+name: 'Dev - PR Close'
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+jobs:
+  merge_pr:
+    name: 'PR Merged (main) - Create Release'
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - id: get-version
+        name: Output version change
+        run: |
+          cd packages/core
+          npm pkg get version
+      # if "release npm" label is present, create a release with tag equal to the version and the PR title as the release title
+      - name: Create release
+        if: contains(github.event.pull_request.labels.*.name, 'release npm')
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_ORG_PAT }}
+        with:
+          tag_name: ${{ steps.set-version.outputs.stdout }}
+          release_name: ${{ github.event.pull_request.title }}
+          body: ${{ github.event.pull_request.body }}
