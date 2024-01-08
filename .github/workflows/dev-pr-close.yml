@@ -3,7 +3,6 @@ on:
   pull_request:
     branches:
       - develop
-      - main
     types:
       - closed
 jobs:
@@ -26,17 +25,21 @@ jobs:
         run: |
           git config --global user.email "${{ secrets.GH_ORG_EMAIL }}"
           git config --global user.name "${{ secrets.GH_ORG_NAME }}"
-      - name: Change directory
-        run: cd packages/core
       - name: Apply version bump (major)
         if: contains(github.event.pull_request.labels.*.name, 'major')
-        run: npm version major
+        run: |
+          cd packages/core
+          npm version major
       - name: Apply version bump (minor)
         if: contains(github.event.pull_request.labels.*.name, 'minor')
-        run: npm version minor
+        run: |
+          cd packages/core
+          npm version minor
       - name: Apply version bump (patch)
         if: contains(github.event.pull_request.labels.*.name, 'patch')
-        run: npm version patch
+        run: |
+          cd packages/core
+          npm version patch
       - name: Git push version bump
         run: git push origin develop --follow-tags --force
       - id: set-version
