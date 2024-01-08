@@ -8,4 +8,6 @@ import { Scene } from './modules/scene/Scene';
 export { useEbonInterface } from './lib/zustand';
 export { InterfaceAnchored } from './modules/interface/behavior';
 
+const a = 5;
+
 export { Behavior, Camera, Ebon, EbonContainer, Entity, Keyboard, Scene };
