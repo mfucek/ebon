@@ -28,9 +28,9 @@ jobs:
       - id: get-version
         name: Output core package version
         run: |
-          ls -la
           cd packages/core/
-          npm pkg get version
+          # npm pkg get version
+          echo "::set-output name=version::$(npm pkg get version)"
       # if "release npm" label is present, create a release with tag equal to the version and the PR title as the release title
       - name: Create release
         if: contains(github.event.pull_request.labels.*.name, 'release npm')
