@@ -44,4 +44,6 @@ jobs:
         run: git push origin develop --follow-tags --force
       - id: set-version
         name: Output version change
-        run: npm pkg get version
+        run: |
+          cd packages/core
+          npm pkg get version

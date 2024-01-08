@@ -29,6 +29,7 @@
 		"dev": "tsup --watch # --onSuccess \"npm link\"",
 		"build": "tsup --minify && npm link",
 		"test": "vitest --typecheck",
+		"ci": "echo",
 		"publish": "npm publish"
 	},
 	"dependencies": {
