@@ -20,7 +20,8 @@ jobs:
       - name: Install dependencies and build 🔧
         run: |
           cd packages/core
-          yarn ci && yarn build
+          yarn
+          yarn build
       - name: Publish package on NPM 📦
         run: |
           cd packages/core
