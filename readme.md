@@ -1,3 +1,5 @@
+:warning: This package is not ready for production use. :warning:
+
 # Ebon
 
 Ebon is an easy to use yet robust framework for making virtual experiences, such as games.
