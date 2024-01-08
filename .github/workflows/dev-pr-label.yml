@@ -3,12 +3,14 @@ on:
   pull_request:
     branches:
       - develop
+      - main
     types:
       - reopened
       - labeled
       - unlabeled
 jobs:
   check_labels:
+    permissions: write-all
     name: 'Check PR Labels'
     runs-on: ubuntu-latest
     steps:
