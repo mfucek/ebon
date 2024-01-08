@@ -3832,10 +3832,8 @@ eastasianwidth@^0.2.0:
   resolved "https://registry.yarnpkg.com/eastasianwidth/-/eastasianwidth-0.2.0.tgz#696ce2ec0aa0e6ea93a397ffcf24aa7840c827cb"
   integrity sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==
 
-ebon@^0.16.0:
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/ebon/-/ebon-0.16.0.tgz#24f3c9b46bf6ad8c583205b20ba0640daba43bf1"
-  integrity sha512-stp4SgYOWYMRjsCrnYEgsu4PYY2jyniWjW8hPbjRMqmY1+Pr8k3yDq2lCKUIyAxn8qB0DT/dO+IHye6hRKrGsA==
+"ebon@file:../../packages/core":
+  version "0.16.4"
   dependencies:
     nanoid "^5.0.3"
     zustand "^4.4.7"
