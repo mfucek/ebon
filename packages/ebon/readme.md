@@ -8,61 +8,67 @@ Ebon is made to be used with Three.js and React out of the box, with (future) po
 
 <!-- We encourage you look at community made packages for Ebon. -->
 
-Ebon is also compatible with and can make use of all the community libraries made for threejs and react.
+<!-- Ebon is also compatible with and can make use of all the community libraries made for threejs and react. -->
 
-Docs can be found [here](https://mfucek.notion.site/Docs-13040c9f22344f62ba65fbda01566959?pvs=4). -->
+<!-- Docs can be found [here](https://mfucek.notion.site/Docs-13040c9f22344f62ba65fbda01566959?pvs=4). -->
 
-![Build the web you want](.github/assets/banner.jpg 'Build the web you want')
+<!-- ![Build the web you want](.github/assets/banner.jpg 'Build the web you want') -->
 
 <p align="center">
   <br/>
-  <a href="https://astro.build">Astro</a> is a website build tool for the modern web &mdash;
+  <a href="https://github.com/mfucek/ebon">Ebon</a> is a framework for building games on the web &mdash;
   <br/>
-  powerful developer experience meets lightweight output.
+  Easy to learn, typesafe and flexible.
   <br/><br/>
 </p>
 
-<div align="center">
+<!-- <div align="center">
 
 ![Build Status](https://github.com/withastro/astro/actions/workflows/ci.yml/badge.svg)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/withastro/astro/blob/main/LICENSE)
 [![npm version](https://badge.fury.io/js/astro.svg)](https://badge.fury.io/js/astro)
 
-</div>
+</div> -->
 
 ## Install
 
-The **recommended** way to install the latest version of Astro is by running the command below:
+<!-- The **recommended** way to install the latest version of Ebon is by running the command below:
+
+:warning: create ebon coming soon :warning:
 
 ```bash
 npm create ebon@latest
-```
+``` -->
 
-You can also install Astro **manually** by running this command instead:
+You can install Ebon **manually** by running this command instead:
 
 ```bash
 npm install ebon
 ```
 
-Looking for help? Start with our [Getting Started](https://docs.astro.build/en/getting-started/) guide.
+<!-- Looking for help? Start with our Getting Started guide. (COMING SOON) -->
 
-Looking for quick examples? [Open a starter project](https://astro.new/) right in your browser.
+<!-- [Getting Started](https://docs.astro.build/en/getting-started/) -->
+
+Looking for quick examples? [Open a showcase project](https://github.com/mfucek/ebon/tree/main/examples) in this repo.
 
 ## Documentation
 
-Visit our [official documentation](https://docs.astro.build/).
+Official documentation coming soon!
+
+<!-- Visit our [official documentation](https://docs.astro.build/). -->
 
 ## Support
 
-Having trouble? Get help in the official [Astro Discord](https://astro.build/chat).
+Having trouble? Get in touch via email [me@mfucek.com](mailto:me@mfucek.com).
 
-## Contributing
+<!-- ## Contributing
 
 **New contributors welcome!** Check out our [Contributors Guide](CONTRIBUTING.md) for help getting started.
 
-Join us on [Discord](https://astro.build/chat) to meet other maintainers. We'll help you get your first contribution in no time!
+Join us on [Discord](https://astro.build/chat) to meet other maintainers. We'll help you get your first contribution in no time! -->
 
-## Directory
+<!-- ## Directory
 
 | Package                                                                                    | Release Notes                                                                                                                                                        |
 | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -104,4 +110,4 @@ Several official projects are maintained outside of this repo:
 
 Astro is free, open source software made possible by these wonderful sponsors.
 
-[❤️ Sponsor Astro! ❤️](https://github.com/withastro/.github/blob/main/FUNDING.md)
+[❤️ Sponsor Astro! ❤️](https://github.com/withastro/.github/blob/main/FUNDING.md) -->
