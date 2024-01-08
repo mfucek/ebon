@@ -30,16 +30,22 @@ jobs:
         run: |
           cd packages/core
           npm version major
+          git add package.json
+          git commit -m "Bump version to $(node -p "require('./package.json').version")"
       - name: Apply version bump (minor)
         if: contains(github.event.pull_request.labels.*.name, 'minor')
         run: |
           cd packages/core
           npm version minor
+          git add package.json
+          git commit -m "Bump version to $(node -p "require('./package.json').version")"
       - name: Apply version bump (patch)
         if: contains(github.event.pull_request.labels.*.name, 'patch')
         run: |
           cd packages/core
           npm version patch
+          git add package.json
+          git commit -m "Bump version to $(node -p "require('./package.json').version")"
       - name: Git push version bump
         run: git push origin develop --follow-tags --force
       - id: set-version
