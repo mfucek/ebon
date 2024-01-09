@@ -1,4 +1,4 @@
-import { Entity, InterfaceAnchored, useEbonInterface } from 'ebon';
+import { Entity, InterfaceAnchored, useNukleusInterface } from 'ebon';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 import { QuestMarker } from '../../ui/QuestMarker';
@@ -31,7 +31,7 @@ export const Dummy = Entity.init(() => {
 			return { state, output: '#' + randomColor };
 		},
 		tickQuest: (state) => {
-			useEbonInterface
+			useNukleusInterface
 				.getState()
 				.setElement(state.interfaceId, <QuestMarker disabled />);
 			return { state: { ...state, quest: { active: false } } };
