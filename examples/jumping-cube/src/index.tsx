@@ -1,4 +1,4 @@
-import { EbonContainer } from 'ebon';
+import { NukleusContainer } from 'ebon';
 import ReactDOM from 'react-dom/client';
 import './styles/global.css';
 
@@ -10,11 +10,11 @@ const root = ReactDOM.createRoot(
 
 root.render(
 	<main className="App">
-		<EbonContainer
+		<NukleusContainer
 			script={game}
 			style={{
 				background: 'linear-gradient(-45deg, #131313, #3a3a3a)'
 			}}
-		></EbonContainer>
+		></NukleusContainer>
 	</main>
 );
