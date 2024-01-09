@@ -42,7 +42,7 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 			this._initCb = blankInit;
 			this._tickCb = blankTick;
 			this._rawActions = {} as Actions;
-			this._used_ids = [];
+			this._used_ids = [this._id];
 			return this;
 		}
 
@@ -50,7 +50,7 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 		this._initCb = previousProps.prevInit;
 		this._tickCb = previousProps.prevTick;
 		this._rawActions = previousProps.prevActions;
-		this._used_ids = previousProps.prevUsedIds;
+		this._used_ids = [...previousProps.prevUsedIds, this._id];
 	}
 
 	/**

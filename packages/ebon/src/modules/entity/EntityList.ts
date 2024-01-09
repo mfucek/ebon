@@ -56,7 +56,7 @@ export class EntityList {
 		let i = 0;
 		while (this.entities[i]) {
 			const entity = this.entities[i];
-			if (entity.has(behavior)) {
+			if (entity.has(behavior) || entity.is(behavior)) {
 				yield entity as LiveEntity<S, A>;
 			}
 			i++;
