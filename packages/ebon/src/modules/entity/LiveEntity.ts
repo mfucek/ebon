@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
 import { Behavior, DefaultState } from '../behavior/Behavior';
+import { Scene } from '../scene/Scene';
 import { CleanActionDict } from './types/action-helpers';
 
 type FinalInitCallback<State> = (initialState?: Partial<State>) => State;
@@ -17,17 +18,27 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 
 	private tickCallback: FinalTickCallback<State>;
 
+	private scene: Scene;
+
 	constructor(
+		scene: Scene,
 		behavior: Behavior<State, Actions>,
 		initialState?: Partial<State>
 	) {
 		this.tickCallback = behavior._tickCb;
 
 		// Execute initialization
-		const state = behavior._initCb(initialState);
-		this.state = state;
-
+		this.scene = scene;
 		this.behavior = behavior;
+
+		const state = {
+			...behavior._initCb({
+				scene: this.scene,
+				this: this as LiveEntity<any, any>
+			} as Partial<State>),
+			...initialState
+		};
+		this.state = state;
 
 		// Generate action methods that wrap the behavior's _rawactions by passing in state as the first parameter
 		this.actions = this._clean(behavior._rawActions);
@@ -45,9 +56,20 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 	};
 
 	executeTick = (delta: number) => {
-		const returnedState = this.tickCallback({ ...this.state, delta });
+		const returnedState = this.tickCallback({
+			...this.state,
+			delta,
+			scene: this.scene,
+			this: this
+		});
 
-		this.state = { ...this.state, ...returnedState, delta };
+		this.state = {
+			...this.state,
+			...returnedState,
+			delta,
+			scene: this.scene,
+			this: this
+		};
 		// Merge returned state with current state
 		// for (const key in returnedState) {
 		// 	this.state[key] = returnedState[key];

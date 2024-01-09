@@ -1,23 +1,11 @@
 import { Entity, InterfaceAnchored, useEbonInterface } from 'ebon';
-import * as THREE from 'three';
-import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
+import { ExampleCube } from '../../behaviors/ExampleCube';
 import { QuestMarker } from '../../ui/QuestMarker';
 
-export const Dummy = Entity.init(() => {
-	// Dummy
-	// create cube
-	const cube: THREE.Mesh<any, any> = new THREE.Mesh(
-		new RoundedBoxGeometry(1, 1, 1, 6, 0.2).translate(0, 0, 0.5),
-		new THREE.MeshStandardMaterial({ color: '#ff8f87', roughness: 0.2 })
-	);
-	cube.castShadow = true;
-	cube.receiveShadow = false;
-	cube.position.x = 2;
-	return { object: cube };
-})
-	// .use(InterfaceAnchored(<Tooltip text="Dummy" />))
+export const Dummy = Entity.use(ExampleCube)
 	.use(InterfaceAnchored(<QuestMarker />))
-	.init(() => {
+	.init(({ position }) => {
+		position.x = 2;
 		return { quest: { active: true } };
 	})
 	.action({

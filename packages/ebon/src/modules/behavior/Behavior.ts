@@ -8,9 +8,12 @@ import {
 	TickCallback
 } from '../entity/types/Callback';
 import { ActionDict } from '../entity/types/action-helpers';
+import { Scene } from '../scene/Scene';
 
 export type DefaultState = {
 	delta: number;
+	scene: Scene;
+	this: LiveEntity<any, any>;
 };
 
 export class Behavior<State extends DefaultState, Actions extends {}> {
@@ -149,8 +152,13 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 		});
 	};
 
-	create = (initialState?: Partial<State>) => {
-		const liveObject = new LiveEntity(this, initialState);
-		return liveObject;
+	require = <RequiredState, RequiredActions>() => {
+		return this;
+	};
+
+	create = (scene: Scene, initialState?: Partial<State>) => {
+		const liveObject = new LiveEntity(scene, this, initialState);
+		scene.addLiveEntity(liveObject as LiveEntity<any, any>);
+		return liveObject as LiveEntity<State, Actions>;
 	};
 }

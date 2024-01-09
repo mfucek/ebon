@@ -22,10 +22,10 @@ const Floor = Entity.init(({ object }) => {
 // Scene
 const scene = new Scene();
 
-scene.addEntity(Player);
-scene.addEntity(Floor);
-// scene.addEntity(Duje);
-export const dummyRef = scene.addEntity(Dummy);
+Player.create(scene);
+Floor.create(scene);
+
+export const dummyRef = Dummy.create(scene);
 
 ebon.setScene(scene);
 

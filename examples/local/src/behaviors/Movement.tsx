@@ -1,10 +1,15 @@
-import { Behavior, Keyboard } from 'ebon';
+import { Behavior, Keyboard, LiveEntity, Scene } from 'ebon';
 import * as THREE from 'three';
 import { ebon } from '../lib/ebon/ebon';
 import { SmoothMovement } from './SmoothMovement';
 
 export const Movement = new Behavior<
-	{ object: THREE.Object3D; delta: number },
+	{
+		object: THREE.Object3D;
+		delta: number;
+		scene: Scene;
+		this: LiveEntity<any, any>;
+	},
 	{}
 >()
 	.use(
@@ -18,7 +23,7 @@ export const Movement = new Behavior<
 		}).register()
 	)
 	.use(SmoothMovement)
-	.tick(({ keyboard, object, delta, speedX, speedY, acceleration }) => {
+	.tick(({ keyboard, delta, speedX, speedY, acceleration }) => {
 		if (keyboard.left) speedX += acceleration * delta;
 		if (keyboard.right) speedX -= acceleration * delta;
 		if (keyboard.up) speedY -= acceleration * delta;

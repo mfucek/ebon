@@ -1,27 +1,20 @@
+import { EntityList } from '@/modules/entity/EntityList';
+import { LiveEntity } from '@/modules/entity/LiveEntity';
 import * as THREE from 'three';
-import { Behavior } from '../behavior/Behavior';
-import { AgeTracker } from '../behavior/behaviors/AgeTracker';
-import { EntityList } from './EntityList';
-import { LiveEntity } from './LiveEntity';
+import { Behavior } from '../Behavior';
 
-const initializeThreeObject = new Behavior() //
-	.init(() => {
-		const cube: THREE.Mesh<any, any> = new THREE.Mesh(
-			new THREE.BoxGeometry().translate(0, 0, 0.5),
-			new THREE.MeshPhongMaterial({ color: 0x444444 })
-		);
-		return { object: cube };
-	});
-
-export const Entity = new Behavior() //
-	.use(initializeThreeObject)
-	// .use(RelativePosition) @TODO fix this
+export const RelativePosition = new Behavior()
+	// <
+	// 	DefaultState & { object: { position: THREE.Vector3 } },
+	// 	{}
+	// > //
 	.init((state) => {
 		const parent = undefined as LiveEntity<any, any> | undefined;
 		return {
 			position: new THREE.Vector3(),
 			parent: parent,
 			children: new EntityList(),
+			// @ts-ignore
 			object: state.object || new THREE.Object3D()
 		};
 	})
@@ -30,7 +23,7 @@ export const Entity = new Behavior() //
 			const newPosition = new THREE.Vector3()
 				.copy(state.parent.state.position)
 				.add(state.position);
-			state.object.position.copy(newPosition);
+			state.object.position.set(newPosition);
 		} else {
 			state.object.position.copy(state.position);
 		}
@@ -45,9 +38,11 @@ export const Entity = new Behavior() //
 			return { state };
 		},
 		setParent: (state, parent: LiveEntity<any, any>) => {
+			console.log('setParent');
+			console.log('setParent', parent);
 			const newState = state;
-			newState.parent = parent;
-			return { state: newState };
+			state.parent = parent;
+			return { state };
+			// return { state: { ...state, parent: parent } };
 		}
-	})
-	.use(AgeTracker);
+	});

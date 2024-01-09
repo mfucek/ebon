@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { useEbonInterface } from '../../lib/zustand';
-import { Behavior, DefaultState } from '../behavior/Behavior';
+import { DefaultState } from '../behavior/Behavior';
+import { EntityList } from '../entity/EntityList';
 import { LiveEntity } from '../entity/LiveEntity';
 
 type RequiredState = DefaultState & {
@@ -8,7 +9,8 @@ type RequiredState = DefaultState & {
 };
 
 export class Scene {
-	entities: LiveEntity<any, any>[] = [];
+	// entities: LiveEntity<any, any>[] = [];
+	entities: EntityList = new EntityList();
 
 	sceneThree: THREE.Scene;
 	rendererThree: THREE.WebGLRenderer;
@@ -55,11 +57,10 @@ export class Scene {
 		this.sceneThree.add(light2);
 	}
 
-	addEntity = <State extends RequiredState, Actions extends {}>(
-		entity: Behavior<State, Actions>
+	addLiveEntity = <State extends RequiredState, Actions extends {}>(
+		liveEntity: LiveEntity<State, Actions>
 		// { create: () => LiveEntity<any> }
 	) => {
-		const liveEntity = entity.create();
 		console.warn(`[Scene]: Added entity. ${this.entities.length}`);
 
 		this.entities.push(liveEntity);
