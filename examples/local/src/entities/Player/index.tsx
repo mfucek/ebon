@@ -18,6 +18,7 @@ export const Player = Entity.use(ExampleCube) //
 		// childRef.actions.setParent()
 	})
 	.use(InterfaceAnchored(<Tooltip text="Player" />))
+	// .use(InterfaceAnchored((ctx) => <Tooltip text="Player" potato={ctx.nekaj}/>))
 	.tick(({ keyboard, isJumping, age, object }) => {
 		if (keyboard.interact) {
 			dummyRef.actions.tickQuest();

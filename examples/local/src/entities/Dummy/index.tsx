@@ -1,9 +1,29 @@
 import { Entity, InterfaceAnchored, useEbonInterface } from 'ebon';
+import * as THREE from 'three';
+import { Mesh } from 'three';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { ExampleCube } from '../../behaviors/ExampleCube';
 import { QuestMarker } from '../../ui/QuestMarker';
 
 export const Dummy = Entity.use(ExampleCube)
 	.use(InterfaceAnchored(<QuestMarker />))
+	.init(({ object }) => {
+		const loader = new GLTFLoader();
+		const dracoLoader = new DRACOLoader();
+		dracoLoader.setDecoderPath('/examples/jsm/libs/draco/');
+		loader.setDRACOLoader(dracoLoader);
+		loader.load('models/duck/Duck.gltf', (gltf) => {
+			const obj = gltf.scene.children[0].children[0] as Mesh;
+
+			obj.geometry.applyMatrix4(
+				new THREE.Matrix4().makeScale(0.01, 0.01, 0.01)
+			);
+			obj.geometry.applyMatrix4(new THREE.Matrix4().makeRotationX(Math.PI / 2));
+
+			object.copy(obj as Mesh);
+		});
+	})
 	.init(({ position }) => {
 		position.x = 2;
 		return { quest: { active: true } };

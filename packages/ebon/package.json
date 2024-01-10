@@ -1,6 +1,6 @@
 {
 	"name": "ebon",
-	"version": "0.16.4",
+	"version": "0.16.5",
 	"description": "An ECS framework for building games & 3d visualizations built on top of three and react.",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",

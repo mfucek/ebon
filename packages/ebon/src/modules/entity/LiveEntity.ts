@@ -76,6 +76,14 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 		// }
 	};
 
+	destroy = () => {
+		this.behavior._cleanupFunctions.forEach((fn) => {
+			fn(this.state);
+		});
+		// remove from scene
+		this.scene.entities.remove(this);
+	};
+
 	is = (behavior: Behavior<any, any>) => {
 		return this.behavior._id === behavior._id;
 	};

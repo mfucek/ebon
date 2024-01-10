@@ -22,6 +22,8 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 
 	_rawActions: Actions = {} as Actions;
 
+	_cleanupFunctions = [] as ((state: State) => void)[];
+
 	_id = nanoid();
 	_used_ids: string[] = [];
 
@@ -30,6 +32,7 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 		prevTick: FinalTickCallback<State>;
 		prevActions: Actions;
 		prevUsedIds: string[];
+		prevCleanupFunctions: ((state: State) => void)[];
 	}) {
 		// blank entity
 		if (!previousProps) {
@@ -78,7 +81,8 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 			prevInit: newInit,
 			prevTick: newTick,
 			prevActions: this._rawActions,
-			prevUsedIds: this._used_ids
+			prevUsedIds: this._used_ids,
+			prevCleanupFunctions: this._cleanupFunctions
 		});
 	};
 
@@ -98,7 +102,8 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 			prevInit: this._initCb,
 			prevTick: newTick,
 			prevActions: this._rawActions,
-			prevUsedIds: this._used_ids
+			prevUsedIds: this._used_ids,
+			prevCleanupFunctions: this._cleanupFunctions
 		});
 	};
 
@@ -132,7 +137,8 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 			prevInit: newInit,
 			prevTick: newTick,
 			prevActions: { ...this._rawActions, ...ent._rawActions },
-			prevUsedIds: [...this._used_ids, ent._id]
+			prevUsedIds: [...this._used_ids, ent._id],
+			prevCleanupFunctions: this._cleanupFunctions
 		});
 	};
 
@@ -148,8 +154,14 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 			prevInit: this._initCb,
 			prevTick: this._tickCb,
 			prevActions: { ...this._rawActions, ...rawActions },
-			prevUsedIds: this._used_ids
+			prevUsedIds: this._used_ids,
+			prevCleanupFunctions: this._cleanupFunctions
 		});
+	};
+
+	cleanup = (fn: (state: State) => void) => {
+		this._cleanupFunctions.push(fn);
+		return this;
 	};
 
 	require = <RequiredState, RequiredActions>() => {
