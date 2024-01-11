@@ -1,0 +1,36 @@
+{
+	"name": "create-ebon-app",
+	"version": "0.0.1",
+	"description": "Create an ebon project",
+	"type": "module",
+	"author": "Matija Fucek <contact@mfucek.com> (https://www.mfucek.com)",
+	"license": "MIT",
+	"homepage": "https://github.com/mfucek/ebon",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mfucek/ebon.git"
+	},
+	"files": [
+		"dist"
+	],
+	"dependencies": {
+		"@clack/core": "^0.3.3",
+		"@clack/prompts": "^0.7.0",
+		"picocolors": "^1.0.0"
+	},
+	"scripts": {
+		"start": "node ./dist/index.js",
+		"build": "tsup --minify && npm link"
+	},
+	"bin": {
+		"create": "./dist/index.js"
+	},
+	"devDependencies": {
+		"@types/node": "^20.11.0",
+		"jiti": "^1.17.0",
+		"ts-node": "^10.9.1",
+		"tsup": "^8.0.1",
+		"typescript": "^5.3.2",
+		"vitest": "^1.1.3"
+	}
+}
