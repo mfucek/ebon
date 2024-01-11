@@ -13,7 +13,8 @@
 	"homepage": "https://github.com/mfucek/ebon",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/mfucek/ebon.git"
+		"url": "git+https://github.com/mfucek/ebon.git",
+		"directory": "packages/ebon"
 	},
 	"keywords": [
 		"ecs",
