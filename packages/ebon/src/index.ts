@@ -1,3 +1,4 @@
+export * from '@/modules/devtools';
 export { useEbonInterface } from './lib/zustand';
 export { Behavior } from './modules/behavior/Behavior';
 export { Ebon, EbonContainer } from './modules/ebon/Ebon';
