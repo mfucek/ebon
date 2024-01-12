@@ -101,5 +101,16 @@ export async function main() {
 
 	p.note(nextSteps, messages.next_steps);
 
+	const recommendedWorkspace = [
+		'we recommend using VSCode',
+		'install the following extensions:',
+		'  - ESLint',
+		'  - Prettier',
+		'  - Tailwind CSS IntelliSense',
+		'  - typescript'
+	].join('\n');
+
+	p.note(recommendedWorkspace, messages.recommendedWorkspace);
+
 	p.outro(`Problems? ${color.underline(color.cyan(contactUrl))}`);
 }

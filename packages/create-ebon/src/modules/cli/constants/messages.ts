@@ -12,5 +12,6 @@ export const messages = {
 	type: 'Pick a project type.',
 	canceled: 'Operation cancelled.',
 	tools: 'Select additional tools.',
-	next_steps: 'Next steps.'
+	next_steps: 'Next steps.',
+	recommendedWorkspace: 'Set up your workspace.'
 };
