@@ -1,8 +1,11 @@
-import { Behavior } from 'ebon';
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry';
 
-export const ExampleCube = new Behavior() //
+import { Behavior } from '@/modules/behavior/Behavior';
+import { ThreeObject } from './ThreeObject';
+
+export const MeshObject = new Behavior() //
+	.use(ThreeObject)
 	.init(() => {
 		// create cube
 		const cube: THREE.Mesh<any, any> = new THREE.Mesh(

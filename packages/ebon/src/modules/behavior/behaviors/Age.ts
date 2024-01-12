@@ -1,6 +1,8 @@
 import { Behavior } from '../Behavior';
+import { Delta } from './Delta';
 
-export const AgeTracker = new Behavior()
+export const Age = new Behavior()
+	.require(Delta)
 	.init(() => {
 		return { age: 0 };
 	})

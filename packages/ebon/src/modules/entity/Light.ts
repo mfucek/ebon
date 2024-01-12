@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Behavior } from '../behavior/Behavior';
-import { AgeTracker } from '../behavior/behaviors/AgeTracker';
+import { Age } from '../behavior/behaviors/Age';
 
 export const Light = (light: THREE.AmbientLight | THREE.DirectionalLight) =>
 	new Behavior() //
@@ -8,4 +8,4 @@ export const Light = (light: THREE.AmbientLight | THREE.DirectionalLight) =>
 			const light = new THREE.AmbientLight(0x404040); // soft white light
 			return { object: light };
 		})
-		.use(AgeTracker);
+		.use(Age);

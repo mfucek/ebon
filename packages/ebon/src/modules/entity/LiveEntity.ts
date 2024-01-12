@@ -1,12 +1,13 @@
 import { nanoid } from 'nanoid';
-import { Behavior, DefaultState } from '../behavior/Behavior';
+import { Behavior, GetActions, GetState } from '../behavior/Behavior';
+import { Delta } from '../behavior/behaviors/Delta';
 import { Scene } from '../scene/Scene';
 import { CleanActionDict } from './types/action-helpers';
 
 type FinalInitCallback<State> = (initialState?: Partial<State>) => State;
 type FinalTickCallback<State> = (state: State) => Partial<State>;
 
-export class LiveEntity<State extends DefaultState, Actions extends {}> {
+export class LiveEntity<State extends {}, Actions extends {}> {
 	state: State;
 	_id = nanoid();
 
@@ -34,8 +35,8 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 		const state = {
 			...behavior._initCb({
 				scene: this.scene,
-				this: this as LiveEntity<any, any>
-			} as Partial<State>),
+				this: this
+			} as unknown as Partial<State>),
 			...initialState
 		};
 		this.state = state;
@@ -55,10 +56,10 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 		return cleanActions;
 	};
 
-	executeTick = (delta: number) => {
+	executeTick = (stateOverride: GetState<typeof Delta> & { scene: Scene }) => {
 		const returnedState = this.tickCallback({
 			...this.state,
-			delta,
+			delta: stateOverride.delta,
 			scene: this.scene,
 			this: this
 		});
@@ -66,7 +67,7 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 		this.state = {
 			...this.state,
 			...returnedState,
-			delta,
+			delta: stateOverride.delta,
 			scene: this.scene,
 			this: this
 		};
@@ -84,10 +85,48 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 		this.scene.entities.remove(this);
 	};
 
-	is = (behavior: Behavior<any, any>) => {
-		return this.behavior._id === behavior._id;
+	is = <B extends Behavior<any, any>>(behavior: B) => {
+		if (this.behavior._id !== behavior._id) {
+			return false;
+		}
+		// @TODO fix unknown type
+		return this as unknown as LiveEntity<GetState<B>, GetActions<B>>;
 	};
-	has = (behavior: Behavior<any, any>) => {
-		return this.behavior._used_ids.includes(behavior._id);
+	has = <B extends Behavior<any, any>>(behavior: B) => {
+		// return this.behavior._used_ids.includes(behavior._id);
+		if (!this.behavior._used_ids.includes(behavior._id)) {
+			return false;
+		}
+		// @TODO fix unknown type
+		return this as unknown as LiveEntity<GetState<B>, GetActions<B>>;
 	};
 }
+// const r = new Behavior().init(() => ({ r: 'r' }));
+
+// const a = new Behavior() //
+// 	.require(r)
+// 	.init(() => ({ a: 1 }))
+// 	.tick(() => ({ a: 2 }))
+// 	.action({
+// 		test: (state, a: number) => {
+// 			return { state, output: a };
+// 		}
+// 	})
+// 	.init(() => ({ b: 1 }))
+// 	.tick(() => ({ b: 2 }));
+
+// new Behavior() //
+// 	.init(() => ({ c: 1 }))
+// 	.tick(() => ({ c: 2 }))
+// 	.use(a)
+// 	.init(() => ({ d: 1 }))
+// 	.tick(() => ({ d: 3 }))
+// 	.create(new Scene())
+// 	.actions.test(2);
+
+// export const Child = new Behavior() //
+// 	.use(RelativePosition)
+// 	.use(Age)
+// 	.use(MeshObject)
+
+// const c = Child.create(new Scene()).actions

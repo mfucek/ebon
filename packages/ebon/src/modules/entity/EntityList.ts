@@ -1,4 +1,4 @@
-import { Behavior, DefaultState } from '../behavior/Behavior';
+import { Behavior } from '../behavior/Behavior';
 import { LiveEntity } from './LiveEntity';
 
 export class EntityList {
@@ -37,7 +37,7 @@ export class EntityList {
 		}
 	}
 
-	*[Symbol.iterator]<S extends DefaultState, A extends {}>(
+	*[Symbol.iterator]<S extends {}, A extends {}>(
 		behavior: Behavior<S, A>
 	): IterableIterator<LiveEntity<S, A>> {
 		let i = 0;
@@ -50,13 +50,31 @@ export class EntityList {
 		}
 	}
 
-	*filterByBehavior<S extends DefaultState, A extends {}>(
+	*filterByBehavior<S extends {}, A extends {}>(
 		behavior: Behavior<S, A>
 	): IterableIterator<LiveEntity<S, A>> {
 		let i = 0;
 		while (this.entities[i]) {
 			const entity = this.entities[i];
 			if (entity.has(behavior) || entity.is(behavior)) {
+				yield entity as LiveEntity<S, A>;
+			}
+			i++;
+		}
+	}
+
+	*filterByMultipleBehaviors<S extends {}, A extends {}>(
+		behaviors: Behavior<S, A>[]
+	): IterableIterator<LiveEntity<S, A>> {
+		let i = 0;
+		while (this.entities[i]) {
+			const entity = this.entities[i];
+			// if entity has all the behaviors
+			if (
+				behaviors.every((behavior) => {
+					return entity.has(behavior) || entity.is(behavior);
+				})
+			) {
 				yield entity as LiveEntity<S, A>;
 			}
 			i++;

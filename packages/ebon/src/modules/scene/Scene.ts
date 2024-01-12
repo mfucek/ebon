@@ -1,12 +1,9 @@
+import { ThreeObject } from '@/lib/three/behaviors/ThreeObject';
 import * as THREE from 'three';
 import { useEbonInterface } from '../../lib/zustand';
-import { DefaultState } from '../behavior/Behavior';
+import { Delta } from '../behavior/behaviors/Delta';
 import { EntityList } from '../entity/EntityList';
 import { LiveEntity } from '../entity/LiveEntity';
-
-type RequiredState = DefaultState & {
-	object: THREE.Object3D;
-};
 
 export class Scene {
 	// entities: LiveEntity<any, any>[] = [];
@@ -57,14 +54,17 @@ export class Scene {
 		this.sceneThree.add(light2);
 	}
 
-	addLiveEntity = <State extends RequiredState, Actions extends {}>(
-		liveEntity: LiveEntity<State, Actions>
-		// { create: () => LiveEntity<any> }
+	addLiveEntity = (
+		// liveEntity: LiveEntity<GetState<typeof ThreeObject>, any>
+		liveEntity: LiveEntity<any, any>
 	) => {
 		console.warn(`[Scene]: Added entity. ${this.entities.length}`);
 
 		this.entities.push(liveEntity);
-		this.sceneThree.add(liveEntity.state.object);
+		// if (liveEntity.state.object) {
+		if (liveEntity.has(ThreeObject)) {
+			this.sceneThree.add(liveEntity.state.object);
+		}
 		return liveEntity;
 	};
 
@@ -80,8 +80,8 @@ export class Scene {
 		// console.warn(
 		// 	`[Scene]: Ticking all ${this.entities.length} entities. ${delta}ms has passed since last tick.`
 		// );
-		for (const entity of this.entities) {
-			entity.executeTick(delta);
+		for (const entity of this.entities.filterByBehavior(Delta)) {
+			entity.executeTick({ delta, scene: this });
 		}
 	}
 }

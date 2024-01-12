@@ -1,31 +1,32 @@
+import { ThreeObject } from '@/lib/three/behaviors/ThreeObject';
 import { EntityList } from '@/modules/entity/EntityList';
 import { LiveEntity } from '@/modules/entity/LiveEntity';
 import * as THREE from 'three';
-import { Behavior } from '../Behavior';
+import { Behavior, GetState } from '../Behavior';
 
-export const RelativePosition = new Behavior()
-	// <
-	// 	DefaultState & { object: { position: THREE.Vector3 } },
-	// 	{}
-	// > //
-	.init((state) => {
-		const parent = undefined as LiveEntity<any, any> | undefined;
+import { Position } from './Position';
+import { Translation } from './Translation';
+
+export const RelativePosition = new Behavior() //
+	.require(ThreeObject)
+	.use(Translation)
+	.init<{
+		parent: LiveEntity<GetState<typeof Position>, any> | null;
+		children: EntityList;
+	}>(() => {
 		return {
-			position: new THREE.Vector3(),
-			parent: parent,
-			children: new EntityList(),
-			// @ts-ignore
-			object: state.object || new THREE.Object3D()
+			parent: null,
+			children: new EntityList()
 		};
 	})
-	.tick((state) => {
-		if (state.parent) {
+	.tick(({ parent, position, object }) => {
+		if (parent) {
 			const newPosition = new THREE.Vector3()
-				.copy(state.parent.state.position)
-				.add(state.position);
-			state.object.position.set(newPosition);
+				.copy(parent.state.position)
+				.add(position);
+			object.position.copy(newPosition);
 		} else {
-			state.object.position.copy(state.position);
+			object.position.copy(position);
 		}
 	})
 	.action({
@@ -38,11 +39,17 @@ export const RelativePosition = new Behavior()
 			return { state };
 		},
 		setParent: (state, parent: LiveEntity<any, any>) => {
-			console.log('setParent');
 			console.log('setParent', parent);
 			const newState = state;
 			state.parent = parent;
 			return { state };
 			// return { state: { ...state, parent: parent } };
+		},
+		unparent: (state, keepRelativePosition?: boolean) => {
+			state.parent = null;
+			if (keepRelativePosition) {
+				state.position = new THREE.Vector3().copy(state.object.position);
+			}
+			return { state };
 		}
 	});

@@ -1,4 +1,3 @@
-// import { Behaveiour } from '../behaviour';
 import { nanoid } from 'nanoid';
 import { LiveEntity } from '../entity/LiveEntity';
 import {
@@ -10,13 +9,7 @@ import {
 import { ActionDict } from '../entity/types/action-helpers';
 import { Scene } from '../scene/Scene';
 
-export type DefaultState = {
-	delta: number;
-	scene: Scene;
-	this: LiveEntity<any, any>;
-};
-
-export class Behavior<State extends DefaultState, Actions extends {}> {
+export class Behavior<State extends {}, Actions extends {}> {
 	_initCb: FinalInitCallback<State>;
 	_tickCb: FinalTickCallback<State>;
 
@@ -98,6 +91,7 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 			const finalState = { ...oldState, ...state, ...newState };
 			return finalState;
 		};
+
 		return new Behavior<State, Actions>({
 			prevInit: this._initCb,
 			prevTick: newTick,
@@ -112,7 +106,7 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 	 * Use lets you use another entity's init and tick functions.
 	 * @template ent - The entity to be used.
 	 */
-	use = <NewState extends DefaultState, NewActions extends ActionDict<State>>(
+	use = <NewState extends {}, NewActions extends {}>(
 		ent: Behavior<NewState, NewActions>
 	) => {
 		const newInit = (initialState?: Partial<State & NewState>) => {
@@ -131,9 +125,11 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 			return finalState;
 		};
 
-		type ActionsType = Omit<Actions, keyof NewActions> & NewActions;
+		type MergedActions = Omit<Actions, keyof NewActions> & NewActions;
+		// type MergedActions = Actions & NewActions;
+		type MergedState = State & NewState;
 
-		return new Behavior<State & NewState, ActionsType>({
+		return new Behavior<MergedState, MergedActions>({
 			prevInit: newInit,
 			prevTick: newTick,
 			prevActions: { ...this._rawActions, ...ent._rawActions },
@@ -148,9 +144,10 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 	//  * @template actionCb - The function to be called when the action is executed.
 	//  */
 	action = <NewActions extends ActionDict<State>>(rawActions: NewActions) => {
-		type MergedActionsType = Omit<Actions, keyof NewActions> & NewActions;
+		type MergedActions = Omit<Actions, keyof NewActions> & NewActions;
+		// type MergedActions = Actions & NewActions;
 
-		return new Behavior<State, MergedActionsType>({
+		return new Behavior<State, MergedActions>({
 			prevInit: this._initCb,
 			prevTick: this._tickCb,
 			prevActions: { ...this._rawActions, ...rawActions },
@@ -164,8 +161,18 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 		return this;
 	};
 
-	require = <RequiredState, RequiredActions>() => {
-		return this;
+	require = <RequiredState extends {}, RequiredActions extends {}>(
+		behavior: Behavior<RequiredState, RequiredActions>
+	) => {
+		return new Behavior<State & RequiredState, Actions & RequiredActions>({
+			prevInit: this._initCb as FinalInitCallback<State & RequiredState>,
+			prevTick: this._tickCb as unknown as FinalTickCallback<
+				State & RequiredState
+			>,
+			prevActions: this._rawActions as Actions & RequiredActions,
+			prevUsedIds: this._used_ids,
+			prevCleanupFunctions: this._cleanupFunctions
+		});
 	};
 
 	create = (scene: Scene, initialState?: Partial<State>) => {
@@ -174,3 +181,25 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 		return liveObject as LiveEntity<State, Actions>;
 	};
 }
+
+type GetStateFromBehavior<B extends Behavior<any, any>> = B extends Behavior<
+	infer S,
+	any
+>
+	? S
+	: never;
+type GetStateFromLiveEntity<B extends LiveEntity<any, any>> =
+	B extends LiveEntity<infer S, any> ? S : never;
+
+export type GetState<B> = B extends Behavior<any, any>
+	? GetStateFromBehavior<B>
+	: B extends LiveEntity<any, any>
+	? GetStateFromLiveEntity<B>
+	: never;
+
+export type GetActions<B extends Behavior<any, any>> = B extends Behavior<
+	any,
+	infer A
+>
+	? A
+	: never;
