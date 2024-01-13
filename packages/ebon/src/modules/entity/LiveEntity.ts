@@ -16,6 +16,7 @@ export class LiveEntity<State extends {}, Actions extends {}> {
 		State,
 		Actions
 	>;
+	_rawActions: Actions = {} as Actions;
 
 	private tickCallback: FinalTickCallback<State>;
 
@@ -31,6 +32,7 @@ export class LiveEntity<State extends {}, Actions extends {}> {
 		// Execute initialization
 		this.scene = scene;
 		this.behavior = behavior;
+		this._rawActions = behavior._rawActions;
 
 		const state = {
 			...behavior._initCb({
@@ -42,7 +44,10 @@ export class LiveEntity<State extends {}, Actions extends {}> {
 		this.state = state;
 
 		// Generate action methods that wrap the behavior's _rawactions by passing in state as the first parameter
-		this.actions = this._clean(behavior._rawActions);
+		this.actions = this._clean(behavior._rawActions) as CleanActionDict<
+			GetState<typeof behavior>,
+			GetActions<typeof behavior>
+		>;
 	}
 
 	_clean = (rawActions: Actions): CleanActionDict<State, Actions> => {
@@ -53,7 +58,7 @@ export class LiveEntity<State extends {}, Actions extends {}> {
 				return fn(this.state, ...args).output;
 			}) as any;
 		}
-		return cleanActions;
+		return cleanActions as CleanActionDict<State, Actions>;
 	};
 
 	executeTick = (stateOverride: GetState<typeof Delta> & { scene: Scene }) => {
@@ -101,32 +106,62 @@ export class LiveEntity<State extends {}, Actions extends {}> {
 		return this as unknown as LiveEntity<GetState<B>, GetActions<B>>;
 	};
 }
-// const r = new Behavior().init(() => ({ r: 'r' }));
 
-// const a = new Behavior() //
-// 	.require(r)
-// 	.init(() => ({ a: 1 }))
-// 	.tick(() => ({ a: 2 }))
-// 	.action({
-// 		test: (state, a: number) => {
-// 			return { state, output: a };
-// 		}
-// 	})
-// 	.init(() => ({ b: 1 }))
-// 	.tick(() => ({ b: 2 }));
+export const initialVal = new Behavior() //
+	.init(() => {
+		return { val: 1 };
+	})
+	.action({
+		log: (state) => {
+			return { state, output: state.val };
+		}
+	});
 
-// new Behavior() //
-// 	.init(() => ({ c: 1 }))
-// 	.tick(() => ({ c: 2 }))
-// 	.use(a)
-// 	.init(() => ({ d: 1 }))
-// 	.tick(() => ({ d: 3 }))
-// 	.create(new Scene())
-// 	.actions.test(2);
+const overrideVal = new Behavior() //
+	.init(() => {
+		return { val: '2' };
+	});
 
-// export const Child = new Behavior() //
-// 	.use(RelativePosition)
-// 	.use(Age)
-// 	.use(MeshObject)
+const relbeh = new Behavior() //
+	.require(overrideVal)
+	.tick(({ val }) => {
+		val;
+		//^?
+	});
 
-// const c = Child.create(new Scene()).actions
+const Child = new Behavior() //
+	.use(initialVal)
+	.tick(({ val }) => {
+		val;
+		//^?
+	})
+	.use(relbeh)
+	.tick(({ val }) => {
+		val;
+		//^?
+	})
+	.action({
+		test: (state, a: number) => {
+			return { state, output: a };
+		}
+	});
+
+const le = Child.create(new Scene());
+
+le._rawActions.log;
+//             ^?
+
+le.actions.log;
+//         ^?
+
+le.state.val;
+//       ^?
+
+// const le2 = Child.create(new Scene());
+// le2.actions.test(2);
+// le2._rawActions.test({val: 2}, 2)
+
+// type A = GetActions<typeof Child>;
+// const a2 = {} as A;
+
+// type B = CleanActionDict<GetState<typeof Child>, A>;

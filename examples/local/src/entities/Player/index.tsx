@@ -1,19 +1,19 @@
-import { Entity, InterfaceAnchored } from 'ebon';
-import { Jumping } from '../../Jumping';
-import { ExampleCube } from '../../behaviors/ExampleCube';
+import { Behavior, InterfaceAnchored, LiveEntity, MeshObject } from 'ebon';
+import { Jumping } from '../../behaviors/Jumping';
 import { Movement } from '../../behaviors/Movement';
 import { dummyRef } from '../../game';
 import { Tooltip } from '../../ui/Tooltip';
 import { Child } from '../Child';
 
 // Player
-export const Player = Entity.use(ExampleCube) //
+export const Player = new Behavior() //
+	.use(MeshObject)
 	.use(Movement)
 	.use(Jumping)
 	.init((state) => {
 		console.log(state.scene);
 		const childRef = Child.create(state.scene);
-		childRef.actions.setParent(state.this);
+		childRef.actions.setParent(state.this as LiveEntity<any, any>);
 
 		// childRef.actions.setParent()
 	})

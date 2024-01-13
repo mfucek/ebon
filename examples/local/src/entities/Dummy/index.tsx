@@ -1,13 +1,24 @@
-import { Entity, InterfaceAnchored, useEbonInterface } from 'ebon';
+import {
+	Age,
+	ApplyTransform,
+	Behavior,
+	InterfaceAnchored,
+	MeshObject,
+	Transform,
+	useEbonInterface
+} from 'ebon';
 import * as THREE from 'three';
 import { Mesh } from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { ExampleCube } from '../../behaviors/ExampleCube';
 import { QuestMarker } from '../../ui/QuestMarker';
 
-export const Dummy = Entity.use(ExampleCube)
+export const Dummy = new Behavior() //
+	.use(Transform)
+	.use(Age)
+	.use(ApplyTransform)
 	.use(InterfaceAnchored(<QuestMarker />))
+	.use(MeshObject)
 	.init(({ object }) => {
 		const loader = new GLTFLoader();
 		const dracoLoader = new DRACOLoader();

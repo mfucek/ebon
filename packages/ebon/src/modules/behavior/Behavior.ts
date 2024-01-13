@@ -55,27 +55,32 @@ export class Behavior<State extends {}, Actions extends {}> {
 	 * @template newCallback - The function to be called when the entity is created.
 	 */
 	init = <NewState extends {}>(newCallback: InitCallback<State, NewState>) => {
+		// type MergedState = Omit<State, keyof NewState> & NewState;
+		type MergedState = State & NewState;
+
 		// pipe result of finalInit into newCallback and set as finalInit in new Entity
-		const newInit = (initialState?: Partial<State>) => {
-			const oldState = this._initCb(initialState);
+		const newInit = (initialState?: Partial<MergedState>) => {
+			const oldState = this._initCb(initialState as unknown as State);
 			const newState = newCallback(oldState);
-			const finalState = { ...oldState, ...newState } as State & NewState;
+			const finalState = { ...oldState, ...newState } as MergedState;
 			return finalState;
 		};
 
-		const newTick = (_state: State & NewState) => {
-			const oldState = this._tickCb(_state) as State & NewState;
+		const newTick = (_state: MergedState) => {
+			const oldState = this._tickCb(_state as unknown as State);
 
-			const finalState = { ...oldState };
+			const finalState = { ...oldState } as unknown as MergedState;
 			return finalState;
 		};
 
-		return new Behavior<State & NewState, Actions>({
+		return new Behavior<MergedState, Actions>({
 			prevInit: newInit,
 			prevTick: newTick,
 			prevActions: this._rawActions,
 			prevUsedIds: this._used_ids,
-			prevCleanupFunctions: this._cleanupFunctions
+			prevCleanupFunctions: this._cleanupFunctions as [] as ((
+				state: MergedState
+			) => void)[]
 		});
 	};
 
@@ -107,11 +112,16 @@ export class Behavior<State extends {}, Actions extends {}> {
 	 * @template ent - The entity to be used.
 	 */
 	use = <NewState extends {}, NewActions extends {}>(
-		ent: Behavior<NewState, NewActions>
+		beh: Behavior<NewState, NewActions>
 	) => {
-		const newInit = (initialState?: Partial<State & NewState>) => {
-			const oldState = this._initCb(initialState);
-			const newState = ent._initCb(oldState as unknown as NewState);
+		type MergedState = Omit<State, keyof NewState> & NewState;
+		type MergedActions = Omit<Actions, keyof NewActions> & NewActions;
+		// type MergedState = State & NewState;
+		// type MergedActions = Actions & NewActions;
+
+		const newInit = (initialState?: Partial<MergedState>) => {
+			const oldState = this._initCb(initialState as State);
+			const newState = beh._initCb(oldState as unknown as NewState);
 
 			const finalState = { ...oldState, ...newState };
 			return finalState;
@@ -119,22 +129,20 @@ export class Behavior<State extends {}, Actions extends {}> {
 
 		const newTick = (oldState: State & NewState) => {
 			const state = this._tickCb(oldState);
-			const newState = ent._tickCb({ ...oldState, ...state });
+			const newState = beh._tickCb({ ...oldState, ...state });
 
 			const finalState = { ...oldState, ...state, ...newState };
 			return finalState;
 		};
 
-		type MergedActions = Omit<Actions, keyof NewActions> & NewActions;
-		// type MergedActions = Actions & NewActions;
-		type MergedState = State & NewState;
-
 		return new Behavior<MergedState, MergedActions>({
 			prevInit: newInit,
-			prevTick: newTick,
-			prevActions: { ...this._rawActions, ...ent._rawActions },
-			prevUsedIds: [...this._used_ids, ent._id],
-			prevCleanupFunctions: this._cleanupFunctions
+			prevTick: newTick as unknown as FinalTickCallback<MergedState>,
+			prevActions: { ...this._rawActions, ...beh._rawActions },
+			prevUsedIds: [...this._used_ids, beh._id],
+			prevCleanupFunctions: this._cleanupFunctions as [] as ((
+				state: MergedState
+			) => void)[]
 		});
 	};
 
@@ -161,17 +169,25 @@ export class Behavior<State extends {}, Actions extends {}> {
 		return this;
 	};
 
-	require = <RequiredState extends {}, RequiredActions extends {}>(
-		behavior: Behavior<RequiredState, RequiredActions>
+	require = <
+		RequiredState extends {},
+		RequiredActions extends ActionDict<RequiredState>
+	>(
+		beh: Behavior<RequiredState, RequiredActions>
 	) => {
-		return new Behavior<State & RequiredState, Actions & RequiredActions>({
-			prevInit: this._initCb as FinalInitCallback<State & RequiredState>,
-			prevTick: this._tickCb as unknown as FinalTickCallback<
-				State & RequiredState
-			>,
-			prevActions: this._rawActions as Actions & RequiredActions,
+		type MergedState = Omit<State, keyof RequiredState> & RequiredState;
+		type MergedActions = Omit<Actions, keyof RequiredActions> & RequiredActions;
+		// type MergedState = State & RequiredState;
+		// type MergedActions = Actions & RequiredActions;
+
+		return new Behavior<MergedState, MergedActions>({
+			prevInit: this._initCb as unknown as FinalInitCallback<MergedState>,
+			prevTick: this._tickCb as unknown as FinalTickCallback<MergedState>,
+			prevActions: this._rawActions as unknown as MergedActions,
 			prevUsedIds: this._used_ids,
-			prevCleanupFunctions: this._cleanupFunctions
+			prevCleanupFunctions: this._cleanupFunctions as [] as ((
+				state: MergedState
+			) => void)[] // @TODO fix this
 		});
 	};
 
