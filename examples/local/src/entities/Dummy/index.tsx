@@ -13,12 +13,8 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { QuestMarker } from '../../ui/QuestMarker';
 
-export const Dummy = new Behavior() //
-	.use(Transform)
-	.use(Age)
-	.use(ApplyTransform)
-	.use(InterfaceAnchored(<QuestMarker />))
-	.use(MeshObject)
+const Duck = new Behavior() //
+	.require(MeshObject)
 	.init(({ object }) => {
 		const loader = new GLTFLoader();
 		const dracoLoader = new DRACOLoader();
@@ -34,7 +30,15 @@ export const Dummy = new Behavior() //
 
 			object.copy(obj as Mesh);
 		});
-	})
+	});
+
+export const Dummy = new Behavior() //
+	.use(Transform)
+	.use(Age)
+	.use(ApplyTransform)
+	.use(InterfaceAnchored(<QuestMarker />))
+	.use(MeshObject)
+	.use(Duck)
 	.init(({ position }) => {
 		position.x = 2;
 		return { quest: { active: true } };
