@@ -9,7 +9,7 @@ export const RelativePosition = new Behavior()
 	// 	{}
 	// > //
 	.init((state) => {
-		const parent = undefined as LiveEntity<any, any, any> | undefined;
+		const parent = undefined as LiveEntity<any, any> | undefined;
 		return {
 			position: new THREE.Vector3(),
 			parent: parent,
@@ -29,15 +29,15 @@ export const RelativePosition = new Behavior()
 		}
 	})
 	.action({
-		addChild: (state, child: LiveEntity<any, any, any>) => {
+		addChild: (state, child: LiveEntity<any, any>) => {
 			state.children.push(child);
 			return { state };
 		},
-		removeChild: (state, child: LiveEntity<any, any, any>) => {
+		removeChild: (state, child: LiveEntity<any, any>) => {
 			state.children.remove(child);
 			return { state };
 		},
-		setParent: (state, parent: LiveEntity<any, any, any>) => {
+		setParent: (state, parent: LiveEntity<any, any>) => {
 			console.log('setParent');
 			console.log('setParent', parent);
 			const newState = state;

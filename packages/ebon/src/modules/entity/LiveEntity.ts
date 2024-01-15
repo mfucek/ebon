@@ -6,15 +6,11 @@ import { CleanActionDict } from './types/action-helpers';
 type FinalInitCallback<State> = (initialState?: Partial<State>) => State;
 type FinalTickCallback<State> = (state: State) => Partial<State>;
 
-export class LiveEntity<
-	State extends DefaultState,
-	Actions extends {},
-	RequiredState extends {}
-> {
+export class LiveEntity<State extends DefaultState, Actions extends {}> {
 	state: State;
 	_id = nanoid();
 
-	behavior: Behavior<State, Actions, RequiredState>;
+	behavior: Behavior<State, Actions, any>;
 	actions: CleanActionDict<State, Actions> = {} as CleanActionDict<
 		State,
 		Actions
@@ -26,7 +22,7 @@ export class LiveEntity<
 
 	constructor(
 		scene: Scene,
-		behavior: Behavior<State, Actions, RequiredState>,
+		behavior: Behavior<State, Actions, any>,
 		initialState?: Partial<State>
 	) {
 		this.tickCallback = behavior._tickCb;
@@ -38,8 +34,8 @@ export class LiveEntity<
 		const state = {
 			...behavior._initCb({
 				scene: this.scene,
-				this: this as LiveEntity<any, any, any>
-			} as Partial<State>),
+				this: this as LiveEntity<State, Actions>
+			} as unknown as Partial<State>),
 			...initialState
 		};
 		this.state = state;

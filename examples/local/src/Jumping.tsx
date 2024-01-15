@@ -7,7 +7,7 @@ export const Jumping = new Behavior<
 		delta: number;
 		object: THREE.Object3D;
 		scene: Scene;
-		this: LiveEntity<any, any, any>;
+		this: LiveEntity<any, any>;
 		position: THREE.Vector3;
 	},
 	{},

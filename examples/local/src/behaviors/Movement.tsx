@@ -8,7 +8,7 @@ export const Movement = new Behavior<
 		object: THREE.Object3D;
 		delta: number;
 		scene: Scene;
-		this: LiveEntity<any, any, any>;
+		this: LiveEntity<any, any>;
 	},
 	{},
 	{}

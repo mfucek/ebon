@@ -11,9 +11,9 @@ import { ActionDict } from '../entity/types/action-helpers';
 import { Scene } from '../scene/Scene';
 
 export type DefaultState = {
-	delta: number;
-	scene: Scene;
-	this: LiveEntity<any, any, any>;
+	// delta: number;
+	// scene: Scene;
+	// this: LiveEntity<any, any, any>;
 };
 
 export class Behavior<
@@ -185,7 +185,7 @@ export class Behavior<
 
 	create = (scene: Scene, initialState?: Partial<State>) => {
 		const liveObject = new LiveEntity(scene, this, initialState);
-		scene.addLiveEntity(liveObject as LiveEntity<any, any, any>);
-		return liveObject as LiveEntity<State, Actions, RequiredState>;
+		scene.addLiveEntity(liveObject as LiveEntity<any, any>);
+		return liveObject as LiveEntity<State, Actions>;
 	};
 }

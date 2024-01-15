@@ -2,22 +2,22 @@ import { Behavior, DefaultState } from '../behavior/Behavior';
 import { LiveEntity } from './LiveEntity';
 
 export class EntityList {
-	entities: LiveEntity<any, any, any>[] = [];
+	entities: LiveEntity<any, any>[] = [];
 
 	length = 0;
 
 	constructor() {}
 
-	add(entity: LiveEntity<any, any, any>) {
+	add(entity: LiveEntity<any, any>) {
 		this.entities.push(entity);
 	}
 
-	push(entity: LiveEntity<any, any, any>) {
+	push(entity: LiveEntity<any, any>) {
 		this.entities.push(entity);
 		this.length += 1;
 	}
 
-	remove(entity: string | LiveEntity<any, any, any>) {
+	remove(entity: string | LiveEntity<any, any>) {
 		if (typeof entity === 'string') {
 			// Handle the case where entity is a string (id)
 			this.entities = this.entities.filter((e) => {
@@ -39,12 +39,12 @@ export class EntityList {
 
 	*[Symbol.iterator]<S extends DefaultState, A extends {}>(
 		behavior: Behavior<S, A, any>
-	): IterableIterator<LiveEntity<S, A, any>> {
+	): IterableIterator<LiveEntity<S, A>> {
 		let i = 0;
 		while (this.entities[i]) {
 			const entity = this.entities[i];
 			// if (entity.has(behavior)) {
-			yield entity as LiveEntity<S, A, any>;
+			yield entity as LiveEntity<S, A>;
 			// }
 			i++;
 		}
@@ -52,12 +52,12 @@ export class EntityList {
 
 	*filterByBehavior<S extends DefaultState, A extends {}>(
 		behavior: Behavior<S, A, any>
-	): IterableIterator<LiveEntity<S, A, any>> {
+	): IterableIterator<LiveEntity<S, A>> {
 		let i = 0;
 		while (this.entities[i]) {
 			const entity = this.entities[i];
 			if (entity.has(behavior) || entity.is(behavior)) {
-				yield entity as LiveEntity<S, A, any>;
+				yield entity as LiveEntity<S, A>;
 			}
 			i++;
 		}
