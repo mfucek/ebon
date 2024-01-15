@@ -6,11 +6,15 @@ import { CleanActionDict } from './types/action-helpers';
 type FinalInitCallback<State> = (initialState?: Partial<State>) => State;
 type FinalTickCallback<State> = (state: State) => Partial<State>;
 
-export class LiveEntity<State extends DefaultState, Actions extends {}> {
+export class LiveEntity<
+	State extends DefaultState,
+	Actions extends {},
+	RequiredState extends {}
+> {
 	state: State;
 	_id = nanoid();
 
-	behavior: Behavior<State, Actions>;
+	behavior: Behavior<State, Actions, RequiredState>;
 	actions: CleanActionDict<State, Actions> = {} as CleanActionDict<
 		State,
 		Actions
@@ -22,7 +26,7 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 
 	constructor(
 		scene: Scene,
-		behavior: Behavior<State, Actions>,
+		behavior: Behavior<State, Actions, RequiredState>,
 		initialState?: Partial<State>
 	) {
 		this.tickCallback = behavior._tickCb;
@@ -34,7 +38,7 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 		const state = {
 			...behavior._initCb({
 				scene: this.scene,
-				this: this as LiveEntity<any, any>
+				this: this as LiveEntity<any, any, any>
 			} as Partial<State>),
 			...initialState
 		};
@@ -84,10 +88,10 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 		this.scene.entities.remove(this);
 	};
 
-	is = (behavior: Behavior<any, any>) => {
+	is = (behavior: Behavior<any, any, any>) => {
 		return this.behavior._id === behavior._id;
 	};
-	has = (behavior: Behavior<any, any>) => {
+	has = (behavior: Behavior<any, any, any>) => {
 		return this.behavior._used_ids.includes(behavior._id);
 	};
 }

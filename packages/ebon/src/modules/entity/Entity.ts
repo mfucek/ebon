@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Behavior } from '../behavior/Behavior';
-import { AgeTracker } from '../behavior/behaviors/AgeTracker';
+import { Age } from '../behavior/behaviors/Age';
 import { EntityList } from './EntityList';
 import { LiveEntity } from './LiveEntity';
 
@@ -17,7 +17,7 @@ export const Entity = new Behavior() //
 	.use(initializeThreeObject)
 	// .use(RelativePosition) @TODO fix this
 	.init((state) => {
-		const parent = undefined as LiveEntity<any, any> | undefined;
+		const parent = undefined as LiveEntity<any, any, any> | undefined;
 		return {
 			position: new THREE.Vector3(),
 			parent: parent,
@@ -36,18 +36,18 @@ export const Entity = new Behavior() //
 		}
 	})
 	.action({
-		addChild: (state, child: LiveEntity<any, any>) => {
+		addChild: (state, child: LiveEntity<any, any, any>) => {
 			state.children.push(child);
 			return { state };
 		},
-		removeChild: (state, child: LiveEntity<any, any>) => {
+		removeChild: (state, child: LiveEntity<any, any, any>) => {
 			state.children.remove(child);
 			return { state };
 		},
-		setParent: (state, parent: LiveEntity<any, any>) => {
+		setParent: (state, parent: LiveEntity<any, any, any>) => {
 			const newState = state;
 			newState.parent = parent;
 			return { state: newState };
 		}
 	})
-	.use(AgeTracker);
+	.use(Age);

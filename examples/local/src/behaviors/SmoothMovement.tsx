@@ -7,8 +7,9 @@ export const SmoothMovement = new Behavior<
 		position: THREE.Vector3;
 		delta: number;
 		scene: Scene;
-		this: LiveEntity<any, any>;
+		this: LiveEntity<any, any, any>;
 	},
+	{},
 	{}
 >()
 	.init(() => {

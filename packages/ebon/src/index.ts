@@ -1,5 +1,5 @@
 export { useEbonInterface } from './lib/zustand';
-export { Behavior } from './modules/behavior/Behavior';
+export * from './modules/behavior';
 export { Ebon, EbonContainer } from './modules/ebon/Ebon';
 export { Camera } from './modules/entity/Camera';
 export { Entity } from './modules/entity/Entity';

@@ -10,8 +10,9 @@ export const InterfaceAnchored = (element: JSX.Element) =>
 			delta: number;
 			object: Object3D;
 			scene: Scene;
-			this: LiveEntity<any, any>;
+			this: LiveEntity<any, any, any>;
 		},
+		{},
 		{}
 	>()
 		.init(({ object }) => {

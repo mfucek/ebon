@@ -58,7 +58,7 @@ export class Scene {
 	}
 
 	addLiveEntity = <State extends RequiredState, Actions extends {}>(
-		liveEntity: LiveEntity<State, Actions>
+		liveEntity: LiveEntity<State, Actions, {}>
 		// { create: () => LiveEntity<any> }
 	) => {
 		console.warn(`[Scene]: Added entity. ${this.entities.length}`);

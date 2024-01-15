@@ -13,10 +13,14 @@ import { Scene } from '../scene/Scene';
 export type DefaultState = {
 	delta: number;
 	scene: Scene;
-	this: LiveEntity<any, any>;
+	this: LiveEntity<any, any, any>;
 };
 
-export class Behavior<State extends DefaultState, Actions extends {}> {
+export class Behavior<
+	State extends DefaultState,
+	Actions extends {},
+	RequiredState extends {}
+> {
 	_initCb: FinalInitCallback<State>;
 	_tickCb: FinalTickCallback<State>;
 
@@ -77,7 +81,7 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 			return finalState;
 		};
 
-		return new Behavior<State & NewState, Actions>({
+		return new Behavior<State & NewState, Actions, RequiredState>({
 			prevInit: newInit,
 			prevTick: newTick,
 			prevActions: this._rawActions,
@@ -98,7 +102,7 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 			const finalState = { ...oldState, ...state, ...newState };
 			return finalState;
 		};
-		return new Behavior<State, Actions>({
+		return new Behavior<State, Actions, RequiredState>({
 			prevInit: this._initCb,
 			prevTick: newTick,
 			prevActions: this._rawActions,
@@ -112,32 +116,38 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 	 * Use lets you use another entity's init and tick functions.
 	 * @template ent - The entity to be used.
 	 */
-	use = <NewState extends DefaultState, NewActions extends ActionDict<State>>(
-		ent: Behavior<NewState, NewActions>
+	use = <
+		NewS extends DefaultState,
+		NewA extends ActionDict<State>,
+		NewRS extends {}
+	>(
+		ent: State extends NewRS ? Behavior<NewS, NewA, NewRS> : 'neki string'
 	) => {
-		const newInit = (initialState?: Partial<State & NewState>) => {
+		const _ent = ent as unknown as Behavior<NewS, NewA, NewRS>;
+
+		const newInit = (initialState?: Partial<State & NewS>) => {
 			const oldState = this._initCb(initialState);
-			const newState = ent._initCb(oldState as unknown as NewState);
+			const newState = _ent._initCb(oldState as unknown as NewS);
 
 			const finalState = { ...oldState, ...newState };
 			return finalState;
 		};
 
-		const newTick = (oldState: State & NewState) => {
+		const newTick = (oldState: State & NewS) => {
 			const state = this._tickCb(oldState);
-			const newState = ent._tickCb({ ...oldState, ...state });
+			const newState = _ent._tickCb({ ...oldState, ...state });
 
 			const finalState = { ...oldState, ...state, ...newState };
 			return finalState;
 		};
 
-		type ActionsType = Omit<Actions, keyof NewActions> & NewActions;
+		type ActionsType = Omit<Actions, keyof NewA> & NewA;
 
-		return new Behavior<State & NewState, ActionsType>({
+		return new Behavior<State & NewS, ActionsType, RequiredState>({
 			prevInit: newInit,
 			prevTick: newTick,
-			prevActions: { ...this._rawActions, ...ent._rawActions },
-			prevUsedIds: [...this._used_ids, ent._id],
+			prevActions: { ...this._rawActions, ..._ent._rawActions },
+			prevUsedIds: [...this._used_ids, _ent._id],
 			prevCleanupFunctions: this._cleanupFunctions
 		});
 	};
@@ -150,7 +160,7 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 	action = <NewActions extends ActionDict<State>>(rawActions: NewActions) => {
 		type MergedActionsType = Omit<Actions, keyof NewActions> & NewActions;
 
-		return new Behavior<State, MergedActionsType>({
+		return new Behavior<State, MergedActionsType, RequiredState>({
 			prevInit: this._initCb,
 			prevTick: this._tickCb,
 			prevActions: { ...this._rawActions, ...rawActions },
@@ -164,13 +174,18 @@ export class Behavior<State extends DefaultState, Actions extends {}> {
 		return this;
 	};
 
-	require = <RequiredState, RequiredActions>() => {
-		return this;
+	require = <NewS extends DefaultState, NewRS extends {}>(
+		newBeh: Behavior<NewS, NewRS, any>
+	) => {
+		type MergedS = State & NewRS & NewS;
+		type MergedRS = Omit<RequiredState, keyof NewS> & NewS;
+
+		return new Behavior<MergedS, Actions, MergedRS>();
 	};
 
 	create = (scene: Scene, initialState?: Partial<State>) => {
 		const liveObject = new LiveEntity(scene, this, initialState);
-		scene.addLiveEntity(liveObject as LiveEntity<any, any>);
-		return liveObject as LiveEntity<State, Actions>;
+		scene.addLiveEntity(liveObject as LiveEntity<any, any, any>);
+		return liveObject as LiveEntity<State, Actions, RequiredState>;
 	};
 }

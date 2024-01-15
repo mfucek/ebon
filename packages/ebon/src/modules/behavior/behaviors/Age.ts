@@ -1,6 +1,6 @@
 import { Behavior } from '../Behavior';
 
-export const AgeTracker = new Behavior()
+export const Age = new Behavior()
 	.init(() => {
 		return { age: 0 };
 	})
