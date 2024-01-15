@@ -14,8 +14,13 @@ export const Movement = new Behavior()
 		}).register()
 	)
 	.init((state) => state.keyboard)
-	.tick(({ keyboard, acceleration }) => {
-		acceleration.set(0, 0, 0);
+	.tick(({ keyboard, acceleration, position, velocity }) => {
+		acceleration.set(0, 0, -50);
+		if (position.z < 0) {
+			velocity.z = 0;
+			position.z = 0;
+		}
+		if (keyboard.jump && position.z === 0) velocity.z = 15;
 		if (keyboard.left) acceleration.x = 100;
 		if (keyboard.right) acceleration.x = -100;
 		if (keyboard.up) acceleration.y = -100;
@@ -23,17 +28,5 @@ export const Movement = new Behavior()
 	})
 	.init((state) => {
 		state.friction.set(25, 25, 0);
-		state.maxVelocity.set(15, 15, Infinity);
-	})
-	.tick((state) => {
-		console.log(state.position);
-		console.log(state.velocity);
-		console.log(state.acceleration);
-		console.log('\n');
+		return { maxVelocity: 15 };
 	});
-// .tick(({ velocity }) => {
-// 	velocity.clamp(
-// 		new THREE.Vector3(-0.1, -0.1, -0.1),
-// 		new THREE.Vector3(0.1, 0.1, 0.1)
-// 	);
-// });

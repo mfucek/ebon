@@ -13,7 +13,7 @@ export const Position = new Behavior() //
 			velocity: new THREE.Vector3(),
 			acceleration: new THREE.Vector3(),
 			friction: new THREE.Vector3(),
-			maxVelocity: new THREE.Vector3(Infinity, Infinity, Infinity)
+			maxVelocity: 15
 		};
 	})
 	.tick((state) => {
@@ -32,7 +32,13 @@ export const Position = new Behavior() //
 			Math.max(Math.abs(velocity.x) - friction.x * deltaSeconds, 0) *
 			Math.sign(velocity.x);
 
-		velocity.clampLength(-maxVelocity.x, maxVelocity.x);
+		// clamp velocity only along x and y axis
+		const radialVelocity = new THREE.Vector2(
+			velocity.x,
+			velocity.y
+		).clampLength(-maxVelocity, maxVelocity);
+		velocity.set(radialVelocity.x, radialVelocity.y, velocity.z);
+		// velocity.clampLength(-maxVelocity.x, maxVelocity.x);
 
 		position.add(velocity.clone().multiplyScalar(deltaSeconds));
 	});
