@@ -38,7 +38,7 @@ export class EntityList {
 	}
 
 	*[Symbol.iterator]<S extends {}, A extends {}>(
-		behavior: Behavior<S, A, any>
+		behavior: Behavior<S, A, any, any>
 	): IterableIterator<LiveEntity<S, A>> {
 		let i = 0;
 		while (this.entities[i]) {
@@ -51,7 +51,7 @@ export class EntityList {
 	}
 
 	*filterByBehavior<S extends {}, A extends {}>(
-		behavior: Behavior<S, A, any>
+		behavior: Behavior<S, A, any, any>
 	): IterableIterator<LiveEntity<S, A>> {
 		let i = 0;
 		while (this.entities[i]) {

@@ -5,6 +5,7 @@ export const Delta = new Behavior<
 		delta: number;
 	},
 	{},
+	{},
 	{}
 >() //
 	.init(() => {

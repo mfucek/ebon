@@ -10,7 +10,7 @@ export class LiveEntity<State extends {}, Actions extends {}> {
 	state: State;
 	_id = nanoid();
 
-	behavior: Behavior<State, Actions, any>;
+	behavior: Behavior<State, Actions, any, any>;
 	actions: CleanActionDict<State, Actions> = {} as CleanActionDict<
 		State,
 		Actions
@@ -22,7 +22,7 @@ export class LiveEntity<State extends {}, Actions extends {}> {
 
 	constructor(
 		scene: Scene,
-		behavior: Behavior<State, Actions, any>,
+		behavior: Behavior<State, Actions, any, any>,
 		initialState?: Partial<State>
 	) {
 		this.tickCallback = behavior._tickCb;
@@ -84,10 +84,10 @@ export class LiveEntity<State extends {}, Actions extends {}> {
 		this.scene.entities.remove(this);
 	};
 
-	is = (behavior: Behavior<any, any, any>) => {
+	is = (behavior: Behavior<any, any, any, any>) => {
 		return this.behavior._id === behavior._id;
 	};
-	has = (behavior: Behavior<any, any, any>) => {
+	has = (behavior: Behavior<any, any, any, any>) => {
 		return this.behavior._used_ids.includes(behavior._id);
 	};
 }

@@ -13,7 +13,8 @@ import { Scene } from '../scene/Scene';
 export class Behavior<
 	State extends {},
 	Actions extends {},
-	RequiredState extends {}
+	RequiredState extends {},
+	RequiredActions extends {}
 > {
 	_initCb: FinalInitCallback<State>;
 	_tickCb: FinalTickCallback<State>;
@@ -75,7 +76,12 @@ export class Behavior<
 			return finalState;
 		};
 
-		return new Behavior<State & NewState, Actions, RequiredState>({
+		return new Behavior<
+			State & NewState,
+			Actions,
+			RequiredState,
+			RequiredActions
+		>({
 			prevInit: newInit,
 			prevTick: newTick,
 			prevActions: this._rawActions,
@@ -96,7 +102,7 @@ export class Behavior<
 			const finalState = { ...oldState, ...state, ...newState };
 			return finalState;
 		};
-		return new Behavior<State, Actions, RequiredState>({
+		return new Behavior<State, Actions, RequiredState, RequiredActions>({
 			prevInit: this._initCb,
 			prevTick: newTick,
 			prevActions: this._rawActions,
@@ -110,10 +116,17 @@ export class Behavior<
 	 * Use lets you use another entity's init and tick functions.
 	 * @template ent - The entity to be used.
 	 */
-	use = <NewS extends {}, NewA extends ActionDict<State>, NewRS extends {}>(
-		ent: State extends NewRS ? Behavior<NewS, NewA, NewRS> : 'neki string'
+	use = <
+		NewS extends {},
+		NewA extends ActionDict<State>,
+		NewRS extends {},
+		NewRA extends {}
+	>(
+		ent: State extends NewRS
+			? Behavior<NewS, NewA, NewRS, NewRA>
+			: 'neki string'
 	) => {
-		const _ent = ent as unknown as Behavior<NewS, NewA, NewRS>;
+		const _ent = ent as unknown as Behavior<NewS, NewA, NewRS, NewRA>;
 
 		const newInit = (initialState?: Partial<State & NewS>) => {
 			const oldState = this._initCb(initialState);
@@ -133,7 +146,12 @@ export class Behavior<
 
 		type ActionsType = Omit<Actions, keyof NewA> & NewA;
 
-		return new Behavior<State & NewS, ActionsType, RequiredState>({
+		return new Behavior<
+			State & NewS,
+			ActionsType,
+			RequiredState,
+			RequiredActions
+		>({
 			prevInit: newInit,
 			prevTick: newTick,
 			prevActions: { ...this._rawActions, ..._ent._rawActions },
@@ -150,7 +168,12 @@ export class Behavior<
 	action = <NewActions extends ActionDict<State>>(rawActions: NewActions) => {
 		type MergedActionsType = Omit<Actions, keyof NewActions> & NewActions;
 
-		return new Behavior<State, MergedActionsType, RequiredState>({
+		return new Behavior<
+			State,
+			MergedActionsType,
+			RequiredState,
+			RequiredActions
+		>({
 			prevInit: this._initCb,
 			prevTick: this._tickCb,
 			prevActions: { ...this._rawActions, ...rawActions },
@@ -164,13 +187,18 @@ export class Behavior<
 		return this;
 	};
 
-	require = <NewS extends {}, NewRS extends {}>(
-		newBeh: Behavior<NewS, NewRS, any>
+	require = <
+		NewS extends {},
+		NewRS extends {},
+		NewA extends {},
+		NewRA extends {}
+	>(
+		newBeh: Behavior<NewS, NewRS, NewA, NewRA>
 	) => {
 		type MergedS = State & NewRS & NewS;
 		type MergedRS = Omit<RequiredState, keyof NewS> & NewS;
 
-		return new Behavior<MergedS, Actions, MergedRS>();
+		return new Behavior<MergedS, Actions, MergedRS, RequiredActions>();
 	};
 
 	create = (scene: Scene, initialState?: Partial<State>) => {

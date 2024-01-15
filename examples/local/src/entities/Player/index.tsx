@@ -21,8 +21,8 @@ export const Player = new Behavior() //
 	.use(Age)
 	.use(MeshObject)
 	.use(Transform)
-	.use(ApplyTransformToObject)
-	.use(Movement);
+	.use(Movement)
+	.use(ApplyTransformToObject);
 // .use(Jumping)
 // .init((state) => {
 // 	console.log(state.scene);

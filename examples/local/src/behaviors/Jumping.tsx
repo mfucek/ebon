@@ -1,18 +1,8 @@
-import { Behavior, LiveEntity, Scene } from 'ebon';
-import * as THREE from 'three';
+import { Age, Behavior, Transform } from 'ebon';
 
-export const Jumping = new Behavior<
-	{
-		age: number;
-		delta: number;
-		object: THREE.Object3D;
-		scene: Scene;
-		this: LiveEntity<any, any>;
-		position: THREE.Vector3;
-	},
-	{},
-	{}
->()
+export const Jumping = new Behavior()
+	.require(Age)
+	.require(Transform)
 	.init(() => {
 		return {
 			jumpDuration: 1000,
@@ -24,19 +14,19 @@ export const Jumping = new Behavior<
 	.tick(
 		({
 			age,
-			object,
 			jumpDuration,
 			jumpStart,
 			isJumping,
 			jumpHeight,
-			position
+			position,
+			scale
 		}) => {
 			if (!isJumping) return;
 
 			const jumpProgress = ((age - jumpStart) % jumpDuration) / jumpDuration;
 
 			if (jumpProgress < 0.2) {
-				object.scale.z = 1 - jumpProgress * 2;
+				scale.z = 1 - jumpProgress * 2;
 			}
 
 			if (0.3 <= jumpProgress && jumpProgress <= 1) {
@@ -51,11 +41,11 @@ export const Jumping = new Behavior<
 
 			if (0.3 <= jumpProgress && jumpProgress <= 0.45) {
 				const relativeProgress = (jumpProgress - 0.3) / 0.15;
-				object.scale.z = 0.6 + relativeProgress * 0.4;
+				scale.z = 0.6 + relativeProgress * 0.4;
 			}
 
 			if (isJumping && age > jumpStart + jumpDuration) {
-				object.scale.z = 1;
+				scale.z = 1;
 				position.z = 0;
 				return { isJumping: false };
 			}

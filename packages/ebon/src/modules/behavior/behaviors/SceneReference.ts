@@ -8,6 +8,7 @@ export const SceneReference = new Behavior<
 		this: LiveEntity<any, any>;
 	},
 	{},
+	{},
 	{}
 >() //
 	.action({
