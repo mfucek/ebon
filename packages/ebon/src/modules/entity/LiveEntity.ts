@@ -1,12 +1,12 @@
 import { nanoid } from 'nanoid';
-import { Behavior, DefaultState } from '../behavior/Behavior';
+import { Behavior } from '../behavior/Behavior';
 import { Scene } from '../scene/Scene';
 import { CleanActionDict } from './types/action-helpers';
 
 type FinalInitCallback<State> = (initialState?: Partial<State>) => State;
 type FinalTickCallback<State> = (state: State) => Partial<State>;
 
-export class LiveEntity<State extends DefaultState, Actions extends {}> {
+export class LiveEntity<State extends {}, Actions extends {}> {
 	state: State;
 	_id = nanoid();
 

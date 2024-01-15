@@ -10,14 +10,8 @@ import {
 import { ActionDict } from '../entity/types/action-helpers';
 import { Scene } from '../scene/Scene';
 
-export type DefaultState = {
-	// delta: number;
-	// scene: Scene;
-	// this: LiveEntity<any, any, any>;
-};
-
 export class Behavior<
-	State extends DefaultState,
+	State extends {},
 	Actions extends {},
 	RequiredState extends {}
 > {
@@ -116,11 +110,7 @@ export class Behavior<
 	 * Use lets you use another entity's init and tick functions.
 	 * @template ent - The entity to be used.
 	 */
-	use = <
-		NewS extends DefaultState,
-		NewA extends ActionDict<State>,
-		NewRS extends {}
-	>(
+	use = <NewS extends {}, NewA extends ActionDict<State>, NewRS extends {}>(
 		ent: State extends NewRS ? Behavior<NewS, NewA, NewRS> : 'neki string'
 	) => {
 		const _ent = ent as unknown as Behavior<NewS, NewA, NewRS>;
@@ -174,7 +164,7 @@ export class Behavior<
 		return this;
 	};
 
-	require = <NewS extends DefaultState, NewRS extends {}>(
+	require = <NewS extends {}, NewRS extends {}>(
 		newBeh: Behavior<NewS, NewRS, any>
 	) => {
 		type MergedS = State & NewRS & NewS;

@@ -1,4 +1,4 @@
-import { Behavior, DefaultState } from '../behavior/Behavior';
+import { Behavior } from '../behavior/Behavior';
 import { LiveEntity } from './LiveEntity';
 
 export class EntityList {
@@ -37,7 +37,7 @@ export class EntityList {
 		}
 	}
 
-	*[Symbol.iterator]<S extends DefaultState, A extends {}>(
+	*[Symbol.iterator]<S extends {}, A extends {}>(
 		behavior: Behavior<S, A, any>
 	): IterableIterator<LiveEntity<S, A>> {
 		let i = 0;
@@ -50,7 +50,7 @@ export class EntityList {
 		}
 	}
 
-	*filterByBehavior<S extends DefaultState, A extends {}>(
+	*filterByBehavior<S extends {}, A extends {}>(
 		behavior: Behavior<S, A, any>
 	): IterableIterator<LiveEntity<S, A>> {
 		let i = 0;

@@ -1,3 +1,4 @@
+export * from './lib/three';
 export { useEbonInterface } from './lib/zustand';
 export * from './modules/behavior';
 export { Ebon, EbonContainer } from './modules/ebon/Ebon';
