@@ -108,6 +108,33 @@ export class Behavior<
 		});
 	};
 
+	cleanup = (fn: (state: State) => void) => {
+		this._cleanupFunctions.push(fn);
+		return this;
+	};
+
+	// /**
+	//  * Action lets you define a function that can be called from outside the entity.
+	//  * @template name - The name of the action.
+	//  * @template actionCb - The function to be called when the action is executed.
+	//  */
+	action = <NewA extends ActionDict<State>>(rawActions: NewA) => {
+		type MergedActionsType = Omit<Actions, keyof NewA> & NewA;
+
+		return new Behavior<
+			State,
+			MergedActionsType,
+			RequiredState,
+			RequiredActions
+		>({
+			prevInit: this._initCb,
+			prevTick: this._tickCb,
+			prevActions: { ...this._rawActions, ...rawActions },
+			prevUsedIds: this._used_ids,
+			prevCleanupFunctions: this._cleanupFunctions
+		});
+	};
+
 	/**
 	 * Use lets you use another entity's init and tick functions.
 	 * @template ent - The entity to be used.
@@ -154,33 +181,6 @@ export class Behavior<
 			prevUsedIds: [...this._used_ids, _ent._id],
 			prevCleanupFunctions: this._cleanupFunctions
 		});
-	};
-
-	// /**
-	//  * Action lets you define a function that can be called from outside the entity.
-	//  * @template name - The name of the action.
-	//  * @template actionCb - The function to be called when the action is executed.
-	//  */
-	action = <NewA extends ActionDict<State>>(rawActions: NewA) => {
-		type MergedActionsType = Omit<Actions, keyof NewA> & NewA;
-
-		return new Behavior<
-			State,
-			MergedActionsType,
-			RequiredState,
-			RequiredActions
-		>({
-			prevInit: this._initCb,
-			prevTick: this._tickCb,
-			prevActions: { ...this._rawActions, ...rawActions },
-			prevUsedIds: this._used_ids,
-			prevCleanupFunctions: this._cleanupFunctions
-		});
-	};
-
-	cleanup = (fn: (state: State) => void) => {
-		this._cleanupFunctions.push(fn);
-		return this;
 	};
 
 	/**
