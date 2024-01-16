@@ -9,5 +9,8 @@ export const Delta = new Behavior<
 	{}
 >() //
 	.init(() => {
-		return { delta: 0 };
+		return { delta: 0, age: 0 };
+	})
+	.tick(({ age, delta }) => {
+		return { age: age + delta };
 	});

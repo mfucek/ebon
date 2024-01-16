@@ -1,7 +1,8 @@
 import {
-	Age,
+	ApplyTransformToObject,
 	Behavior,
 	Delta,
+	EmptyObject,
 	InterfaceAnchored,
 	MeshObject,
 	Transform,
@@ -15,11 +16,12 @@ import { QuestMarker } from '../../ui/QuestMarker';
 
 export const Dummy = new Behavior() //
 	.use(Delta)
-	.use(Age)
-	.use(MeshObject)
+	.use(EmptyObject)
 	.use(Transform)
+	.use(ApplyTransformToObject)
 	.use(InterfaceAnchored(<QuestMarker />))
-	.init(({ object }) => {
+	.use(MeshObject)
+	.init(({ object, position }) => {
 		const loader = new GLTFLoader();
 		const dracoLoader = new DRACOLoader();
 		dracoLoader.setDecoderPath('/examples/jsm/libs/draco/');
@@ -34,8 +36,6 @@ export const Dummy = new Behavior() //
 
 			object.copy(obj as Mesh);
 		});
-	})
-	.init(({ position }) => {
 		position.x = 2;
 		return { quest: { active: true } };
 	})

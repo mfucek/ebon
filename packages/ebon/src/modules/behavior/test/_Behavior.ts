@@ -33,7 +33,7 @@ export class _Behavior<
 		return new _Behavior<MergedS, MergedA, MergedRS, MergedRA>();
 	};
 
-	_rawactions: Actions = {} as Actions;
+	_rawActions: Actions = {} as Actions;
 	actions = {} as CleanActionDict<State, Actions>;
 
 	action = <NewA extends ActionDict<State>>(newRawActions: NewA) => {
@@ -75,7 +75,7 @@ export class _Behavior<
 	>(
 		newBeh: _Behavior<NewS, NewA, NewRS, NewRA>
 	) => {
-		type MergedS = Merge<[State, NewRS, NewS]>;
+		type MergedS = Merge<[NewS, State, NewRS]>;
 		type MergedA = ActionsNewState<
 			Merge<[Actions, NewRA, NewA]>,
 			Merge<[MergedS, MergedRS]>
@@ -89,9 +89,3 @@ export class _Behavior<
 		return new _Behavior<MergedS, MergedA, MergedRS, MergedRA>();
 	};
 }
-
-const Camera = new _Behavior() //
-	.init(() => ({ focus: null as null | number }))
-	.action({
-		focus: (state, newFocus: number | null) => ({ state, output: newFocus })
-	});

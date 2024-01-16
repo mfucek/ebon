@@ -1,7 +1,7 @@
-import { Age, Behavior, Transform } from 'ebon';
+import { Behavior, Delta, Transform } from 'ebon';
 
 export const Jumping = new Behavior()
-	.require(Age)
+	.require(Delta)
 	.require(Transform)
 	.init(() => {
 		return {

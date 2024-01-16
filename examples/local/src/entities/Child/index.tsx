@@ -1,8 +1,7 @@
-import { Age, Behavior, Delta, MeshObject, Transform } from 'ebon';
+import { Behavior, Delta, MeshObject, Transform } from 'ebon';
 
 export const Child = new Behavior() //
 	.use(Delta)
-	.use(Age)
 	.use(MeshObject)
 	.use(Transform)
 	.init((state) => {

@@ -8,7 +8,7 @@ const Position = new _Behavior() //
 		hello: (state, message: string) => ({ state: {}, output: 5 })
 	});
 
-Position._rawactions.hello;
+Position._rawActions.hello;
 
 Position.actions.hello('asd');
 
@@ -18,42 +18,42 @@ Position.actions.hello(
 );
 
 // @ts-expect-error
-Position._rawactions.hello({ position: { x: 0, y: 0, z: 0 } });
+Position._rawActions.hello({ position: { x: 0, y: 0, z: 0 } });
 
 // --------------------------------------------------
 
 const TestPositionUse = new _Behavior() //
 	.use(Position);
 
-TestPositionUse._rawactions.hello({ position: { x: 0, y: 0, z: 0 } }, 'asd');
+TestPositionUse._rawActions.hello({ position: { x: 0, y: 0, z: 0 } }, 'asd');
 
-TestPositionUse._rawactions.hello(
+TestPositionUse._rawActions.hello(
 	{ position: { x: 0, y: 0, z: 0 } },
 	// @ts-expect-error
 	213
 );
 
 // @ts-expect-error
-TestPositionUse._rawactions.hello({ position: { x: 0, y: 0, z: 0 } });
+TestPositionUse._rawActions.hello({ position: { x: 0, y: 0, z: 0 } });
 
 // --------------------------------------------------
 
 const TestPositionRequire = new _Behavior() //
 	.require(Position);
 
-TestPositionRequire._rawactions.hello(
+TestPositionRequire._rawActions.hello(
 	{ position: { x: 0, y: 0, z: 0 } },
 	'asd'
 );
 
-TestPositionRequire._rawactions.hello(
+TestPositionRequire._rawActions.hello(
 	{ position: { x: 0, y: 0, z: 0 } },
 	// @ts-expect-error
 	213
 );
 
 // @ts-expect-error
-TestPositionRequire._rawactions.hello({ position: { x: 0, y: 0, z: 0 } });
+TestPositionRequire._rawActions.hello({ position: { x: 0, y: 0, z: 0 } });
 
 // --------------------------------------------------
 
@@ -61,16 +61,16 @@ const TestPositionUseUse = new _Behavior() //
 	.use(Position)
 	.use(EmptyBehavior);
 
-TestPositionUseUse._rawactions.hello({ position: { x: 0, y: 0, z: 0 } }, 'asd');
+TestPositionUseUse._rawActions.hello({ position: { x: 0, y: 0, z: 0 } }, 'asd');
 
-TestPositionUseUse._rawactions.hello(
+TestPositionUseUse._rawActions.hello(
 	{ position: { x: 0, y: 0, z: 0 } },
 	// @ts-expect-error
 	213
 );
 
 // @ts-expect-error
-TestPositionUseUse._rawactions.hello({ position: { x: 0, y: 0, z: 0 } });
+TestPositionUseUse._rawActions.hello({ position: { x: 0, y: 0, z: 0 } });
 
 // --------------------------------------------------
 
@@ -78,19 +78,19 @@ const TestPositionRequireUse = new _Behavior() //
 	.require(Position)
 	.use(EmptyBehavior);
 
-TestPositionRequireUse._rawactions.hello(
+TestPositionRequireUse._rawActions.hello(
 	{ position: { x: 0, y: 0, z: 0 } },
 	'asd'
 );
 
-TestPositionRequireUse._rawactions.hello(
+TestPositionRequireUse._rawActions.hello(
 	{ position: { x: 0, y: 0, z: 0 } },
 	// @ts-expect-error
 	213
 );
 
 // @ts-expect-error
-TestPositionRequireUse._rawactions.hello({ position: { x: 0, y: 0, z: 0 } });
+TestPositionRequireUse._rawActions.hello({ position: { x: 0, y: 0, z: 0 } });
 
 // --------------------------------------------------
 
@@ -98,19 +98,19 @@ const TestPositionRequireRequire = new _Behavior() //
 	.require(Position)
 	.require(EmptyBehavior);
 
-TestPositionRequireRequire._rawactions.hello(
+TestPositionRequireRequire._rawActions.hello(
 	{ position: { x: 0, y: 0, z: 0 } },
 	'asd'
 );
 
-TestPositionRequireRequire._rawactions.hello(
+TestPositionRequireRequire._rawActions.hello(
 	{ position: { x: 0, y: 0, z: 0 } },
 	// @ts-expect-error
 	213
 );
 
 // @ts-expect-error
-TestPositionRequireRequire._rawactions.hello({
+TestPositionRequireRequire._rawActions.hello({
 	position: { x: 0, y: 0, z: 0 }
 });
 
@@ -160,7 +160,7 @@ const CompleteWorkingTest = new _Behavior()
 	.use(Velocity)
 	.use(MapPositionToObject);
 
-CompleteWorkingTest._rawactions.hello(
+CompleteWorkingTest._rawActions.hello(
 	{
 		object: { position: { x: 0, y: 0, z: 0 } },
 		position: { x: 0, y: 0, z: 0 },
@@ -178,7 +178,7 @@ CompleteWorkingTest.actions.hello(
 	213
 );
 // @ts-expect-error
-CompleteWorkingTest._rawactions.hello({
+CompleteWorkingTest._rawActions.hello({
 	object: { position: { x: 0, y: 0, z: 0 } }
 });
 
@@ -232,9 +232,9 @@ const TestGood = new _Behavior() //
 		>()
 	);
 
-TestGood._rawactions.hello({ position: { x: 0, y: 0, z: 0 } }, 'asd');
+TestGood._rawActions.hello({ position: { x: 0, y: 0, z: 0 } }, 'asd');
 
-TestGood._rawactions.hello(
+TestGood._rawActions.hello(
 	{ position: { x: 0, y: 0, z: 0 } },
 	// @ts-expect-error
 	213
@@ -244,10 +244,47 @@ const TestBad = new _Behavior() //
 	.use(Position2)
 	.use(new _Behavior());
 
-TestBad._rawactions.hello({ position: { x: 0, y: 0, z: 0 } }, 'asd');
+TestBad._rawActions.hello({ position: { x: 0, y: 0, z: 0 } }, 'asd');
 
-TestBad._rawactions.hello(
+TestBad._rawActions.hello(
 	{ position: { x: 0, y: 0, z: 0 } },
 	// @ts-expect-error
 	213
 );
+
+// --------------------------------------------------
+
+const OneProp = new _Behavior() //
+	.init(() => ({ a: 0 }))
+	.init(() => ({ b: 0 }));
+
+const Test = new _Behavior() //
+	.require(OneProp)
+	.init(() => ({ a: 'a' }));
+
+const OverrideProp = new _Behavior() //
+	.use(OneProp)
+	.use(Test)
+	.tick((state) => {
+		state.a;
+	})
+	.init((state) => {
+		return { newA: state.a };
+	})
+	.tick((state) => {
+		state.a;
+		state.newA;
+	})
+	// .actions({
+	// 	test: (state, a: number) => ({ state, output: 5 })
+	// })
+	.init(() => ({ focus: null as null | number }))
+	.action({
+		focus: (state, newFocus: number | null) => ({ state, output: newFocus })
+	});
+
+const Camera = new _Behavior() //
+	.init(() => ({ focus: null as null | number }))
+	.action({
+		focus: (state, newFocus: number | null) => ({ state, output: newFocus })
+	});

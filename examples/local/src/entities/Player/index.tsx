@@ -7,7 +7,6 @@ import { Movement } from '../../behaviors/Movement';
 // import { Child } from '../Child';
 
 import {
-	Age,
 	ApplyTransformToObject,
 	Behavior,
 	Delta,
@@ -18,7 +17,6 @@ import {
 // Player
 export const Player = new Behavior() //
 	.use(Delta)
-	.use(Age)
 	.use(MeshObject)
 	.use(Transform)
 	.use(Movement)

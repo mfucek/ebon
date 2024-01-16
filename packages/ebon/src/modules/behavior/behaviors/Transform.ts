@@ -1,4 +1,3 @@
-import { EmptyObject } from '@/lib/three/behaviors/EmptyObject';
 import { LiveEntity } from '@/modules/entity/LiveEntity';
 import * as THREE from 'three';
 import { GetActions, GetState } from '..';
@@ -13,7 +12,9 @@ export const Position = new Behavior() //
 			velocity: new THREE.Vector3(),
 			acceleration: new THREE.Vector3(),
 			friction: new THREE.Vector3(),
-			maxVelocity: 15
+			maxVelocity: 15,
+			scale: new THREE.Vector3(),
+			rotation: new THREE.Euler()
 		};
 	})
 	.tick((state) => {
@@ -41,26 +42,6 @@ export const Position = new Behavior() //
 		// velocity.clampLength(-maxVelocity.x, maxVelocity.x);
 
 		position.add(velocity.clone().multiplyScalar(deltaSeconds));
-	});
-
-const Rotation = new Behavior() //
-	.init(() => {
-		return {
-			rotation: new THREE.Euler(),
-			angularVelocity: new THREE.Euler(),
-			angularAcceleration: new THREE.Euler(),
-			angularFriction: new THREE.Euler()
-		};
-	});
-
-const Scale = new Behavior() //
-	.init(() => {
-		return {
-			scale: new THREE.Vector3(),
-			scaleVelocity: new THREE.Vector3(),
-			scaleAcceleration: new THREE.Vector3(),
-			scaleFriction: new THREE.Vector3()
-		};
 	});
 
 const Parent = new Behavior() //
@@ -93,14 +74,4 @@ const Parent = new Behavior() //
 		}
 	});
 
-export const Transform = new Behavior() //
-	.require(Delta)
-	.require(EmptyObject)
-	.use(Position)
-	.use(Rotation)
-	.use(Scale)
-	// .use(Parent)
-	.tick((state) => {
-		const { position, object } = state;
-		object.position.copy(position);
-	});
+export const Transform = Position;
