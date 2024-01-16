@@ -110,13 +110,13 @@ const mergedAB2 = {} as ActionsNewState<
 export type GetState<T extends _Behavior<any, any, any, any>> =
 	T extends _Behavior<infer State, any, any, any> ? State : never;
 
+export type GetActions<T extends _Behavior<any, any, any, any>> =
+	T extends _Behavior<any, infer Actions, any, any> ? Actions : never;
+
 export type GetRequiredState<T extends _Behavior<any, any, any, any>> =
-	T extends _Behavior<any, infer RequiredState, any, any>
+	T extends _Behavior<any, any, infer RequiredState, any>
 		? RequiredState
 		: never;
-
-export type GetActions<T extends _Behavior<any, any, any, any>> =
-	T extends _Behavior<any, any, infer Actions, any> ? Actions : never;
 
 export type GetRequiredActions<T extends _Behavior<any, any, any, any>> =
 	T extends _Behavior<any, any, any, infer RequiredActions>
@@ -125,7 +125,7 @@ export type GetRequiredActions<T extends _Behavior<any, any, any, any>> =
 
 export type GetAllGenerics<T extends _Behavior<any, any, any, any>> = {
 	state: GetState<T>;
-	requiredState: GetRequiredState<T>;
 	actions: GetActions<T>;
+	requiredState: GetRequiredState<T>;
 	requiredActions: GetRequiredActions<T>;
 };
