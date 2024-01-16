@@ -59,29 +59,25 @@ export class Behavior<
 	 * Init lets you define the initial states of an entity.
 	 * Init can be called multiple times to add more initial states or refine existing ones.
 	 * @template newCallback - The function to be called when the entity is created.
+	 * Init pipes all new initCallbacks into a finalInitCallback, later to be executed on entity instantiation.
 	 */
-	init = <NewState extends {}>(newCallback: InitCallback<State, NewState>) => {
+	init = <NewS extends {}>(newCallback: InitCallback<State, NewS>) => {
 		// pipe result of finalInit into newCallback and set as finalInit in new Entity
 		const newInit = (initialState?: Partial<State>) => {
 			const oldState = this._initCb(initialState);
 			const newState = newCallback(oldState);
-			const finalState = { ...oldState, ...newState } as State & NewState;
+			const finalState = { ...oldState, ...newState } as State & NewS;
 			return finalState;
 		};
 
-		const newTick = (_state: State & NewState) => {
-			const oldState = this._tickCb(_state) as State & NewState;
+		const newTick = (_state: State & NewS) => {
+			const oldState = this._tickCb(_state) as State & NewS;
 
 			const finalState = { ...oldState };
 			return finalState;
 		};
 
-		return new Behavior<
-			State & NewState,
-			Actions,
-			RequiredState,
-			RequiredActions
-		>({
+		return new Behavior<State & NewS, Actions, RequiredState, RequiredActions>({
 			prevInit: newInit,
 			prevTick: newTick,
 			prevActions: this._rawActions,
@@ -94,6 +90,7 @@ export class Behavior<
 	 * Tick defines how an entity's state changes over time. It receives the current state as an argument, as defined by all the init functions.
 	 * Tick can be called multiple times to add more state changes.
 	 * @template newCallback - The function to be called when the entity is ticked.
+	 * Tick pipes all new tickCallbacks into a finalTickCallback, later to be executed on every frame.
 	 */
 	tick = (newCallback: TickCallback<State>) => {
 		const newTick = (oldState: State) => {
@@ -111,7 +108,6 @@ export class Behavior<
 		});
 	};
 
-	// use implies a new init, which means new static type for internal state
 	/**
 	 * Use lets you use another entity's init and tick functions.
 	 * @template ent - The entity to be used.
@@ -124,7 +120,7 @@ export class Behavior<
 	>(
 		ent: State extends NewRS
 			? Behavior<NewS, NewA, NewRS, NewRA>
-			: 'neki string'
+			: "The current behavior does not satisfy the new behavior' requirements! Please check your console for more details."
 	) => {
 		const _ent = ent as unknown as Behavior<NewS, NewA, NewRS, NewRA>;
 
@@ -165,8 +161,8 @@ export class Behavior<
 	//  * @template name - The name of the action.
 	//  * @template actionCb - The function to be called when the action is executed.
 	//  */
-	action = <NewActions extends ActionDict<State>>(rawActions: NewActions) => {
-		type MergedActionsType = Omit<Actions, keyof NewActions> & NewActions;
+	action = <NewA extends ActionDict<State>>(rawActions: NewA) => {
+		type MergedActionsType = Omit<Actions, keyof NewA> & NewA;
 
 		return new Behavior<
 			State,
@@ -187,6 +183,13 @@ export class Behavior<
 		return this;
 	};
 
+	/**
+	 * Require lets you require another entity's state. The later init and tick functions will receive the required state as it was defined by the required entity.
+	 * Require can be called multiple times to add more required states.
+	 * The require method is used to enforce that when this behavior is used on another, that the other behavior has the required state.
+	 * @param newBeh - The behavior to be required.
+	 * @returns
+	 */
 	require = <
 		NewS extends {},
 		NewRS extends {},

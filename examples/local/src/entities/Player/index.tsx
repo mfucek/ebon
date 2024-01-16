@@ -45,3 +45,10 @@ export const Player = new Behavior() //
 // 		return { isJumping: true, jumpStart: age };
 // 	}
 // });
+
+const a = new Behavior() //
+	.action({ a: (state, a: number) => ({ state, output: 1 }) })
+	.action({ b: (state, a: number) => ({ state, output: 1 }) });
+
+const b = new Behavior() //
+	.require(a);
