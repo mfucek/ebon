@@ -76,7 +76,7 @@ class Ebon {
 			if (!this.container) {
 				return false;
 			}
-			this.resizeRendererToDisplaySize(this.container);
+			this.resizeRendererToDisplaySize();
 		};
 
 		const cleanup = () => {
@@ -89,22 +89,25 @@ class Ebon {
 		return cleanup;
 	};
 
-	resizeRendererToDisplaySize = (container: HTMLDivElement) => {
-		if (!this.activeScene) {
+	resizeRendererToDisplaySize = () => {
+		console.log('resize');
+
+		if (!this.activeScene || !this.container) {
 			return false;
 		}
+		const container = this.container;
 		const renderer = this.activeScene.rendererThree;
 		const camera = this.activeScene.activeCamera;
 		const canvas = renderer.domElement;
 		const width = container.clientWidth;
 		const height = container.clientHeight;
-		const needResize = canvas.width !== width || canvas.height !== height;
-		if (needResize) {
-			renderer.setSize(width, height, false);
-			camera.aspect = width / height;
-			camera.updateProjectionMatrix();
-		}
-		return needResize;
+		// const needResize = canvas.width !== width || canvas.height !== height;
+		// if (needResize) {
+		renderer.setSize(width, height, false);
+		camera.aspect = width / height;
+		camera.updateProjectionMatrix();
+		// }
+		// return needResize;
 	};
 
 	setScene = (scene: Scene) => {

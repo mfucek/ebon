@@ -14,3 +14,6 @@ export type GetState<B> = B extends Behavior<any, any, any, any>
 
 export type GetActions<B extends Behavior<any, any, any, any>> =
 	B extends Behavior<any, infer A, any, any> ? A : never;
+
+export type AnyBehavior = Behavior<any, any, any, any>;
+export type AnyLiveEntity = LiveEntity<any, any>;

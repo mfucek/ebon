@@ -2,11 +2,15 @@ import * as THREE from 'three';
 
 import { GetState, Transform } from '@/modules/behavior';
 import { Behavior } from '@/modules/behavior/Behavior';
-import { SceneReference } from '@/modules/behavior/behaviors/SceneReference';
+import {
+	SceneReference,
+	imperativeThisReference
+} from '@/modules/behavior/behaviors/SceneReference';
+import { AnyLiveEntity } from '@/modules/behavior/helper-types';
 import { LiveEntity } from '@/modules/entity/LiveEntity';
 import { EmptyObject } from './EmptyObject';
 
-export const CameraObject = new Behavior() //
+const _CameraObject = new Behavior() //
 	.require(SceneReference)
 	.use(EmptyObject)
 	// ovaj require mozda treba da ispliva skroz na vrh! ako se koristi top-level. pa je potreban kao argument za create
@@ -23,11 +27,21 @@ export const CameraObject = new Behavior() //
 		return { object: camera, focus: null };
 	})
 	.action({
-		focus: (state, target: LiveEntity<GetState<typeof Transform>, {}>) => {
-			return { state: { ...state, target } };
+		focus: (state, focus: AnyLiveEntity) => {
+			if (!focus.has(Transform)) {
+				console.error(
+					`[CameraObject]: Cannot focus on entity without Transform behavior.`
+				);
+				return { state };
+			}
+			return { state: { ...state, focus } };
 		},
 		makeActive: (state) => {
 			state.scene.setCamera(state.object);
 			return { state };
 		}
 	});
+
+export const CameraObject = _CameraObject.use(
+	imperativeThisReference(_CameraObject)
+);

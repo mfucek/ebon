@@ -25,16 +25,16 @@ export class LiveEntity<State extends {}, Actions extends {}> {
 		behavior: Behavior<State, Actions, any, any>,
 		initialState?: Partial<State>
 	) {
-		this.tickCallback = behavior._tickCb;
-
 		// Execute initialization
 		this.scene = scene;
 		this.behavior = behavior;
 
+		this.tickCallback = behavior._tickCb;
+
 		const state = {
 			...behavior._initCb({
 				scene: this.scene,
-				this: this as LiveEntity<State, Actions>
+				this: this
 			} as unknown as Partial<State>),
 			...initialState
 		};

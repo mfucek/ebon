@@ -5,7 +5,7 @@ import { Behavior } from '../Behavior';
 export const SceneReference = new Behavior<
 	{
 		scene: Scene;
-		this: LiveEntity<any, any>;
+		this: LiveEntity<{}, {}>;
 	},
 	{},
 	{},
@@ -17,3 +17,24 @@ export const SceneReference = new Behavior<
 			return { state };
 		}
 	});
+
+export const imperativeThisReference = <S extends {}, A extends {}>(
+	thisBeh: Behavior<S, A, any, any>
+) => {
+	const SceneReference = new Behavior<
+		{
+			scene: Scene;
+			this: LiveEntity<S, A>;
+		},
+		{},
+		{},
+		{}
+	>() //
+		.action({
+			destroy: (state) => {
+				state.scene.entities.remove(state.this);
+				return { state };
+			}
+		});
+	return SceneReference;
+};

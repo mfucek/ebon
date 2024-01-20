@@ -1,9 +1,9 @@
 {
-	"extends": ["plugin:react/recommended", "prettier"],
-	"plugins": ["prettier"],
+	"extends": ["plugin:react/recommended"],
+	// "plugins": ["prettier"],
 	"ignorePatterns": ["**/dist/**/*.ts", "**/dist/**/*.tsx"],
 	"rules": {
-		"prettier/prettier": ["warn", { "endOfLine": "auto" }],
+		// "prettier/prettier": ["warn", { "endOfLine": "auto" }],
 		"func-style": [2, "expression"],
 		"react/self-closing-comp": [
 			"error",
