@@ -1,4 +1,5 @@
 import { Entity, Scene } from 'ebon';
+import { Spawner } from 'entities/Spawner';
 import * as THREE from 'three';
 import { Dummy } from './entities/Dummy';
 import { MainCamera } from './entities/MainCamera';
@@ -30,6 +31,8 @@ export const playerRef = Player.create(scene);
 Floor.create(scene);
 
 export const dummyRef = Dummy.create(scene);
+
+Spawner.create(scene);
 
 MainCamera.create(scene);
 

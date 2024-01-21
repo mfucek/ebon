@@ -12,7 +12,7 @@ import * as THREE from 'three';
 import { Mesh } from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { QuestMarker } from '../../ui/QuestMarker';
+import { QuestMarker } from '../ui/QuestMarker';
 
 export const Dummy = new Behavior() //
 	.use(Delta)

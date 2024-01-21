@@ -49,7 +49,12 @@ export class LiveEntity<State extends {}, Actions extends {}> {
 		for (const key in rawActions) {
 			const fn = rawActions[key] as Function;
 			cleanActions[key] = ((...args: any) => {
-				return fn(this.state, ...args).output;
+				const ret = fn(this.state, ...args);
+				this.state = {
+					...this.state,
+					...(ret.state || {})
+				};
+				return ret.output;
 			}) as any;
 		}
 		return cleanActions;

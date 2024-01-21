@@ -10,7 +10,7 @@ import {
 import * as THREE from 'three';
 import { playerRef } from '../game';
 
-const cameraOffset = new THREE.Vector3(0, 5, 3).multiplyScalar(2);
+const cameraOffset = new THREE.Vector3(0, 5, 5).multiplyScalar(2);
 
 export const MainCamera = new Behavior()
 	.use(Delta)
@@ -32,7 +32,6 @@ export const MainCamera = new Behavior()
 		if (!focus) {
 			return;
 		}
-		console.log('focus', focus._id);
 
 		position.lerpVectors(
 			position.clone(),
