@@ -12,7 +12,8 @@
 		"directory": "packages/create-ebon-app"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"base"
 	],
 	"engines": {
 		"node": ">=18.17.0"
