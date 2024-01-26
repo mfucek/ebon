@@ -25,7 +25,7 @@
 	},
 	"scripts": {
 		"start": "node ./dist/index.js",
-		"build": "tsup --minify && npm link"
+		"build": "tsup --minify"
 	},
 	"exports": "./dist/index.js",
 	"bin": {
