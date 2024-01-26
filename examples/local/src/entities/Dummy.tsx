@@ -1,14 +1,27 @@
-import { Entity, InterfaceAnchored, useEbonInterface } from 'ebon';
+import {
+	ApplyTransformToObject,
+	Behavior,
+	Delta,
+	EmptyObject,
+	InterfaceAnchored,
+	MeshObject,
+	Transform,
+	useEbonInterface
+} from 'ebon';
 import * as THREE from 'three';
 import { Mesh } from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { ExampleCube } from '../../behaviors/ExampleCube';
-import { QuestMarker } from '../../ui/QuestMarker';
+import { QuestMarker } from '../ui/QuestMarker';
 
-export const Dummy = Entity.use(ExampleCube)
+export const Dummy = new Behavior() //
+	.use(Delta)
+	.use(EmptyObject)
+	.use(Transform)
+	.use(ApplyTransformToObject)
 	.use(InterfaceAnchored(<QuestMarker />))
-	.init(({ object }) => {
+	.use(MeshObject)
+	.init(({ object, position }) => {
 		const loader = new GLTFLoader();
 		const dracoLoader = new DRACOLoader();
 		dracoLoader.setDecoderPath('/examples/jsm/libs/draco/');
@@ -23,8 +36,6 @@ export const Dummy = Entity.use(ExampleCube)
 
 			object.copy(obj as Mesh);
 		});
-	})
-	.init(({ position }) => {
 		position.x = 2;
 		return { quest: { active: true } };
 	})

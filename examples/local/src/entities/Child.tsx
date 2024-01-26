@@ -1,7 +1,9 @@
-import { Entity } from 'ebon';
-import { ExampleCube } from '../../behaviors/ExampleCube';
+import { Behavior, Delta, MeshObject, Transform } from 'ebon';
 
-export const Child = Entity.use(ExampleCube)
+export const Child = new Behavior() //
+	.use(Delta)
+	.use(MeshObject)
+	.use(Transform)
 	.init((state) => {
 		state.position.z = 0.5;
 		state.object.scale.set(0.5, 0.5, 0.5);

@@ -1,16 +1,16 @@
 import { nanoid } from 'nanoid';
-import { Behavior, DefaultState } from '../behavior/Behavior';
+import { Behavior } from '../behavior/Behavior';
 import { Scene } from '../scene/Scene';
 import { CleanActionDict } from './types/action-helpers';
 
 type FinalInitCallback<State> = (initialState?: Partial<State>) => State;
 type FinalTickCallback<State> = (state: State) => Partial<State>;
 
-export class LiveEntity<State extends DefaultState, Actions extends {}> {
+export class LiveEntity<State extends {}, Actions extends {}> {
 	state: State;
 	_id = nanoid();
 
-	behavior: Behavior<State, Actions>;
+	behavior: Behavior<State, Actions, any, any>;
 	actions: CleanActionDict<State, Actions> = {} as CleanActionDict<
 		State,
 		Actions
@@ -22,20 +22,20 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 
 	constructor(
 		scene: Scene,
-		behavior: Behavior<State, Actions>,
+		behavior: Behavior<State, Actions, any, any>,
 		initialState?: Partial<State>
 	) {
-		this.tickCallback = behavior._tickCb;
-
 		// Execute initialization
 		this.scene = scene;
 		this.behavior = behavior;
 
+		this.tickCallback = behavior._tickCb;
+
 		const state = {
 			...behavior._initCb({
 				scene: this.scene,
-				this: this as LiveEntity<any, any>
-			} as Partial<State>),
+				this: this
+			} as unknown as Partial<State>),
 			...initialState
 		};
 		this.state = state;
@@ -49,7 +49,12 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 		for (const key in rawActions) {
 			const fn = rawActions[key] as Function;
 			cleanActions[key] = ((...args: any) => {
-				return fn(this.state, ...args).output;
+				const ret = fn(this.state, ...args);
+				this.state = {
+					...this.state,
+					...(ret.state || {})
+				};
+				return ret.output;
 			}) as any;
 		}
 		return cleanActions;
@@ -84,10 +89,10 @@ export class LiveEntity<State extends DefaultState, Actions extends {}> {
 		this.scene.entities.remove(this);
 	};
 
-	is = (behavior: Behavior<any, any>) => {
+	is = (behavior: Behavior<any, any, any, any>) => {
 		return this.behavior._id === behavior._id;
 	};
-	has = (behavior: Behavior<any, any>) => {
+	has = (behavior: Behavior<any, any, any, any>) => {
 		return this.behavior._used_ids.includes(behavior._id);
 	};
 }

@@ -1,16 +1,13 @@
 import * as THREE from 'three';
 import { useEbonInterface } from '../../lib/zustand';
-import { DefaultState } from '../behavior/Behavior';
+import { Ebon } from '../ebon';
 import { EntityList } from '../entity/EntityList';
 import { LiveEntity } from '../entity/LiveEntity';
-
-type RequiredState = DefaultState & {
-	object: THREE.Object3D;
-};
 
 export class Scene {
 	// entities: LiveEntity<any, any>[] = [];
 	entities: EntityList = new EntityList();
+	ebon: Ebon | null = null;
 
 	sceneThree: THREE.Scene;
 	rendererThree: THREE.WebGLRenderer;
@@ -57,7 +54,10 @@ export class Scene {
 		this.sceneThree.add(light2);
 	}
 
-	addLiveEntity = <State extends RequiredState, Actions extends {}>(
+	addLiveEntity = <
+		State extends { object: THREE.Object3D },
+		Actions extends {}
+	>(
 		liveEntity: LiveEntity<State, Actions>
 		// { create: () => LiveEntity<any> }
 	) => {
@@ -69,7 +69,11 @@ export class Scene {
 	};
 
 	setCamera(camera: THREE.PerspectiveCamera) {
+		if (!this.ebon) return;
+
 		this.activeCamera = camera;
+		this.ebon.resizeRendererToDisplaySize();
+		useEbonInterface.getState().setCamera(this.activeCamera);
 	}
 
 	render() {
@@ -84,4 +88,9 @@ export class Scene {
 			entity.executeTick(delta);
 		}
 	}
+
+	makeActive = (ebon: Ebon) => {
+		this.ebon = ebon;
+		ebon.setScene(this);
+	};
 }
