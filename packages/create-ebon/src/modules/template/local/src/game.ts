@@ -1,7 +1,5 @@
 import { Entity, Scene } from 'ebon';
-import { Spawner } from 'entities/Spawner';
 import * as THREE from 'three';
-import { Dummy } from './entities/Dummy';
 import { MainCamera } from './entities/MainCamera';
 import { Player } from './entities/Player';
 import { ebon } from './lib/ebon/ebon';
@@ -30,9 +28,9 @@ scene.makeActive(game);
 export const playerRef = Player.create(scene);
 Floor.create(scene);
 
-export const dummyRef = Dummy.create(scene);
+// export const dummyRef = Dummy.create(scene);
 
-Spawner.create(scene);
+// Spawner.create(scene);
 
 MainCamera.create(scene);
 

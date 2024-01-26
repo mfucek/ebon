@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Behavior } from '../behavior/Behavior';
-import { AgeTracker } from '../behavior/behaviors/AgeTracker';
+import { Delta } from '../behavior/behaviors/Delta';
 import { EntityList } from './EntityList';
 import { LiveEntity } from './LiveEntity';
 
@@ -14,6 +14,7 @@ const initializeThreeObject = new Behavior() //
 	});
 
 export const Entity = new Behavior() //
+	.use(Delta)
 	.use(initializeThreeObject)
 	// .use(RelativePosition) @TODO fix this
 	.init((state) => {
@@ -49,5 +50,4 @@ export const Entity = new Behavior() //
 			newState.parent = parent;
 			return { state: newState };
 		}
-	})
-	.use(AgeTracker);
+	});

@@ -1,19 +1,10 @@
-import { Object3D } from 'three';
+import { EmptyObject } from '@/lib/three';
 import { useEbonInterface } from '../../lib/zustand';
 import { Behavior } from '../behavior/Behavior';
-import { LiveEntity } from '../entity/LiveEntity';
-import { Scene } from '../scene/Scene';
 
 export const InterfaceAnchored = (element: JSX.Element) =>
-	new Behavior<
-		{
-			delta: number;
-			object: Object3D;
-			scene: Scene;
-			this: LiveEntity<any, any>;
-		},
-		{}
-	>()
+	new Behavior()
+		.require(EmptyObject)
 		.init(({ object }) => {
 			const interfaceId = Math.random().toString(36).substr(2, 9);
 			const offsetObject = object.clone();
