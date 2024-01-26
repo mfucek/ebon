@@ -28,21 +28,21 @@ jobs:
       - name: Apply version bump (major)
         if: contains(github.event.pull_request.labels.*.name, 'major')
         run: |
-          cd packages/core
+          cd packages/ebon
           npm version major
           git add package.json
           git commit -m "Bump version to $(node -p "require('./package.json').version")"
       - name: Apply version bump (minor)
         if: contains(github.event.pull_request.labels.*.name, 'minor')
         run: |
-          cd packages/core
+          cd packages/ebon
           npm version minor
           git add package.json
           git commit -m "Bump version to $(node -p "require('./package.json').version")"
       - name: Apply version bump (patch)
         if: contains(github.event.pull_request.labels.*.name, 'patch')
         run: |
-          cd packages/core
+          cd packages/ebon
           npm version patch
           git add package.json
           git commit -m "Bump version to $(node -p "require('./package.json').version")"
@@ -51,5 +51,5 @@ jobs:
       - id: get-version
         name: Output version change
         run: |
-          cd packages/core
+          cd packages/ebon
           npm pkg get version

@@ -19,12 +19,12 @@ jobs:
           node-version: '20.x'
       - name: Install dependencies and build 🔧
         run: |
-          cd packages/core
+          cd packages/ebon
           yarn
           yarn build
       - name: Publish package on NPM 📦
         run: |
-          cd packages/core
+          cd packages/ebon
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

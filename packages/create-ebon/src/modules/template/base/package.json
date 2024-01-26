@@ -1,11 +1,10 @@
 {
-	"name": "jumping-cube",
+	"name": "template",
 	"version": "0.1.0",
+	"type": "module",
 	"private": "true",
 	"scripts": {
-		"dev": "BROWSER=none vite --host",
-		"relink": "echo",
-		"postinstall": "yarn relink"
+		"dev": "BROWSER=none vite --host"
 	},
 	"eslintConfig": {
 		"extends": [

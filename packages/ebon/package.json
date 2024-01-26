@@ -1,0 +1,59 @@
+{
+	"name": "ebon",
+	"version": "0.16.5",
+	"description": "An ECS framework for building games & 3d visualizations built on top of three and react.",
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"author": "Matija Fucek <contact@mfucek.com> (https://www.mfucek.com)",
+	"license": "MIT",
+	"homepage": "https://github.com/mfucek/ebon",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mfucek/ebon.git",
+		"directory": "packages/ebon"
+	},
+	"keywords": [
+		"ecs",
+		"three",
+		"react",
+		"game",
+		"engine",
+		"framework",
+		"3d",
+		"visualization"
+	],
+	"scripts": {
+		"dev": "tsup --watch # --onSuccess \"npm link\"",
+		"build": "tsup --minify && npm link",
+		"test": "vitest --typecheck",
+		"ci": "echo"
+	},
+	"dependencies": {
+		"nanoid": "^5.0.3",
+		"zustand": "^4.4.7"
+	},
+	"peerDependencies": {
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"three": "^0.158.0"
+	},
+	"devDependencies": {
+		"@swc/core": "^1.3.99",
+		"@types/jest": "^29.5.10",
+		"@types/nanoid": "^3.0.0",
+		"@types/node": "^16.7.13",
+		"@types/react": "^18.0.0",
+		"@types/react-dom": "^18.0.0",
+		"@types/three": "^0.158.3",
+		"ts-jest": "^29.1.1",
+		"ts-node": "^10.9.1",
+		"tsup": "^8.0.1",
+		"typescript": "^5.3.2",
+		"vite-tsconfig-paths": "^4.2.3",
+		"vitest": "^1.1.3"
+	}
+}

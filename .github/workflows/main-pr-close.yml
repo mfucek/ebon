@@ -28,7 +28,7 @@ jobs:
       - id: get-version
         name: Output core package version
         run: |
-          cd packages/core/
+          cd packages/ebon/
           echo "VERSION=$(npm pkg get version)" >> $GITHUB_ENV
       # if "release npm" label is present, create a release with tag equal to the version and the PR title as the release title
       - name: Create release
