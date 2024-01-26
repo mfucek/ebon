@@ -15,6 +15,6 @@ root.render(
 			style={{
 				background: 'linear-gradient(-45deg, #131313, #3a3a3a)'
 			}}
-		></EbonContainer>
+		/>
 	</main>
 );
