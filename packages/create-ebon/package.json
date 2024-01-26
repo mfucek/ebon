@@ -1,6 +1,6 @@
 {
 	"name": "create-ebon-app",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "Create an ebon project",
 	"type": "module",
 	"author": "Matija Fucek <contact@mfucek.com> (https://www.mfucek.com)",
