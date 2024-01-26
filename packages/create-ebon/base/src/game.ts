@@ -25,12 +25,9 @@ const Floor = Entity.init(({ object }) => {
 const scene = new Scene();
 scene.makeActive(game);
 
+// Player
 export const playerRef = Player.create(scene);
 Floor.create(scene);
-
-// export const dummyRef = Dummy.create(scene);
-
-// Spawner.create(scene);
 
 MainCamera.create(scene);
 

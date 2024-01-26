@@ -10,7 +10,7 @@ import {
 import * as THREE from 'three';
 import { playerRef } from '../game';
 
-const cameraOffset = new THREE.Vector3(0, 5, 4).multiplyScalar(2);
+const cameraOffset = new THREE.Vector3(0, 5, 4).multiplyScalar(1.5);
 
 export const MainCamera = new Behavior()
 	.use(Delta)
@@ -25,8 +25,6 @@ export const MainCamera = new Behavior()
 
 		position.copy(cameraOffset);
 		object.position.copy(cameraOffset);
-		// @ts-ignore
-		object.setFocalLength(40);
 		object.lookAt(0, 0, 0);
 		return { focus: playerRef };
 	})
@@ -40,5 +38,4 @@ export const MainCamera = new Behavior()
 			focus.state.position.clone().add(cameraOffset),
 			0.2
 		);
-		// object.lookAt(target);
 	});
